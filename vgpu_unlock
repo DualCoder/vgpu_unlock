@@ -1,0 +1,197 @@
+#!/bin/python3
+#
+# vGPU unlock script for consumer GPUs.
+#
+# Copyright 2021 Jonathan Johansson
+# This file is part of the "vgpu_unlock" project, and is distributed under the MIT License.
+# See the LICENSE file for more details.
+#
+
+
+import errno
+import frida
+import os
+import queue
+import subprocess
+import sys
+import time
+
+script_source = r"""
+    // Value of the "request" argument used by nvidia-vgpud and nvidia-vgpu-mgr
+    // when calling ioctl to read the PCI device ID and type (and possibly
+    // other things) from the GPU.
+    var REQ_QUERY_GPU = ptr("0xC020462A");
+
+    // When issuing ioctl with REQ_QUERY_GPU then the "argp" argument is a
+    // pointer to a structure something like this:
+    //
+    // struct arg {
+    //    uint32_t unknown_1; // Initialized prior to call.
+    //    uint32_t unknown_2; // Initialized prior to call.
+    //    uint32_t op_type;   // Operation type, see comment below.
+    //    uint32_t padding_1; // Always set to 0 prior to call.
+    //    void*    result;    // Pointer initialized prior to call.
+    //                        // Pointee initialized to 0 prior to call.
+    //                        // Pointee is written by ioctl call.
+    //    uint32_t unknown_4; // Set to 0x10 for READ_PCI_ID and set to 4 for
+                              // READ_DEV_TYPE prior to call.
+    //    uint32_t status;    // Written by ioctl call. See comment below.
+    // }
+
+    // These are the observed values for the op_type member.
+    var OP_READ_DEV_TYPE = 0x800289; // *result type is uint64_t.
+    var OP_READ_PCI_ID = 0x20801801; // *result type in uint32_t, the uppper 16
+                                     // bits is the device ID.
+
+    // nvidia-vgpu-mgr expects this value for a vGPU capable GPU.
+    var DEV_TYPE_VGPU_CAPABLE = uint64(3);
+
+    // When ioctl returns success (retval >= 0) but sets the status value of
+    // the arg structure to 3 then nvidia-vgpud will sleep for a bit (first
+    // 0.1s then 1s then 10s) then issue the same ioctl call again until the
+    // status differs from 3. It will attempt this for up to 24h before giving
+    // up.
+    var STATUS_TRY_AGAIN = 3;
+
+    Interceptor.attach(Module.getExportByName(null, "ioctl"), {
+        onEnter(args) {
+            console.log("ioctl called");
+            this.request = args[1];
+            this.argp = args[2];
+        },
+        onLeave(retVal) {
+            if(!this.request.equals(REQ_QUERY_GPU)) {
+                // Not a call we care about.
+                return;
+            }
+
+            if(retVal.toInt32() < 0) {
+                // Call failed.
+                return;
+            }
+
+            // Lookup status value according to struct above.
+            var status = this.argp.add(0x1C).readU32();
+
+            if(status == STATUS_TRY_AGAIN) {
+                // Driver will try again.
+                return;
+            }
+
+            var op_type = this.argp.add(8).readU32();
+
+            if(op_type == OP_READ_PCI_ID) {
+                // Lookup address of the device ID, note that we point directly at
+                // the upper 16 bits of the word.
+                var devid_ptr = this.argp.add(0x10).readPointer().add(2);
+
+                // Now we replace the device ID with a spoofed value that needs to
+                // be determined such that the spoofed value represents a GPU with
+                // vGPU support that uses the same GPU chip as our actual GPU.
+                var actual_devid = devid_ptr.readU16();
+                var spoofed_devid = actual_devid;
+
+                // GP102
+                if(actual_devid == 0x1b00 || // TITAN X (Pascal)
+                   actual_devid == 0x1b02 || // TITAN Xp
+                   actual_devid == 0x1b06 || // GTX 1080 Ti
+                   actual_devid == 0x1b30) { // Quadro P6000
+                    spoofed_devid = 0x1b38; // Tesla P40
+                }
+
+                // GP104
+                if(actual_devid == 0x1b80 || // GTX 1080
+                   actual_devid == 0x1b81 || // GTX 1070
+                   actual_devid == 0x1b82 || // GTX 1070 Ti
+                   actual_devid == 0x1b83 || // GTX 1060 6GB
+                   actual_devid == 0x1b84 || // GTX 1060 3GB
+                   actual_devid == 0x1bb0) { // Quadro P5000
+                    spoofed_devid = 0x1bb3; // Tesla P4
+                }
+
+                // TU102
+                if(actual_devid == 0x1e02 || // TITAN RTX
+                   actual_devid == 0x1e04 || // RTX 2080 Ti
+                   actual_devid == 0x1e07) { // RTX 2080 Ti
+                    spoofed_devid = 0x1e30; // Quadro RTX 6000
+                }
+
+                devid_ptr.writeU16(spoofed_devid);
+            }
+            
+            if(op_type == OP_READ_DEV_TYPE) {
+                // Set device type to vGPU capable.
+                var dev_type_ptr = this.argp.add(0x10).readPointer();
+                dev_type_ptr.writeU64(DEV_TYPE_VGPU_CAPABLE);
+            }
+        }
+    });
+"""
+
+device = frida.get_local_device()
+child_processes = queue.Queue()
+
+def instrument(pid):
+    """Instrument and resume process.
+
+    :param pid: Process identifier
+    """
+
+    session = device.attach(pid)
+    # We need to also instrument the children since nvidia-vgpud forks itself
+    # when initially launched.
+    session.enable_child_gating()
+    script = session.create_script(script_source)
+    script.load()
+    device.resume(pid)
+
+
+def on_child_added(child):
+    """Callback for when a new child process has been created.
+
+    :param child: The newly created child process.
+    """
+
+    child_processes.put(child.pid)
+    instrument(child.pid)
+
+
+def wait_exit(pid):
+    """Wait for a process to terminate.
+
+    :param pid: Process ID of the target process.
+    """
+
+    while 1:
+        time.sleep(.1)
+
+        try:
+            os.kill(pid, 0)
+
+        except OSError as e:
+            if e.errno == errno.ESRCH:
+                break
+
+
+def main():
+    """Entrypoint."""
+
+    # Behave at least a little bit like a forking service.
+    if sys.argv[1] != "-f":
+        subprocess.Popen([sys.argv[0], "-f"] + sys.argv[1:])
+        exit()
+
+    device.on("child-added", on_child_added)
+    pid = device.spawn(sys.argv[2])
+    instrument(pid)
+
+    # Wait for everything to terminate before exiting.
+    wait_exit(pid)
+
+    while not child_processes.empty():
+        wait_exit(child_processes.get_nowait())
+
+
+if __name__ == "__main__":
+    main()
+
