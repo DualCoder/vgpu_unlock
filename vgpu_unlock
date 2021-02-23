@@ -112,8 +112,26 @@ script_source = r"""
                 // TU102
                 if(actual_devid == 0x1e02 || // TITAN RTX
                    actual_devid == 0x1e04 || // RTX 2080 Ti
-                   actual_devid == 0x1e07) { // RTX 2080 Ti
+                   actual_devid == 0x1e07) { // RTX 2080 Ti Rev. A
                     spoofed_devid = 0x1e30; // Quadro RTX 6000
+                }
+
+                // TU104
+                if(actual_devid == 0x1e81 || // RTX 2080 Super
+                   actual_devid == 0x1e82 || // RTX 2080
+                   actual_devid == 0x1e84 || // RTX 2070 Super
+                   actual_devid == 0x1e87 || // RTX 2080 Rev. A
+                   actual_devid == 0x1e89 || // RTX 2060
+                   actual_devid == 0x1eb0 || // Quadro RTX 5000
+                   actual_devid == 0x1eb1) { // Quadro RTX 4000
+                    spoofed_devid = 0x1eb8; // Tesla T4
+                }
+
+                // GA102
+                if(actual_devid == 0x2204 || // RTX 3090
+                   actual_devid == 0x2205 || // RTX 3080 Ti
+                   actual_devid == 0x2206) { // RTX 3080
+                    spoofed_devid = 0x2235; // RTX A40
                 }
 
                 devid_ptr.writeU16(spoofed_devid);

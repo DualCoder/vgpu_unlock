@@ -36,7 +36,7 @@ Install the NVIDIA GRID vGPU driver, make sure to install it as a dkms module.
 ./nvidia-installer
 ```
 
-Modify the line begining with `ExecStart=` in `/lib/systemd/system/nvidia-vgpu.service`
+Modify the line begining with `ExecStart=` in `/lib/systemd/system/nvidia-vgpud.service`
 and `/lib/systemd/system/nvidia-vgpu-mgr.service` to use `vgpu_unlock` as
 executable and pass the original executable as the first argument. Ex:
 ```

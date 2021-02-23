@@ -561,7 +561,7 @@ static void vgpu_unlock_hmac_sha256(void* dst,
  */
 
 /* Debug logs can be enabled here. */
-#if 0
+#if 1
 	#define LOG(...) printk(__VA_ARGS__)
 #else
 	#define LOG(...)
@@ -571,6 +571,87 @@ static void vgpu_unlock_hmac_sha256(void* dst,
 #define VGPU_UNLOCK_MAGIC_PHYS_END (VGPU_UNLOCK_MAGIC_PHYS_BEG + 0x10)
 #define VGPU_UNLOCK_KEY_PHYS_BEG   (0xf0029634)
 #define VGPU_UNLOCK_KEY_PHYS_END   (VGPU_UNLOCK_KEY_PHYS_BEG + 0x10)
+
+typedef struct {
+	uint8_t num_blocks; /* Number of 16 byte blocks up to 'sign'. */
+	uint16_t unk0;
+	uint16_t dev_id;
+	uint16_t vend_id; /* Check skipped if zero. */
+	uint16_t subsys_id;
+	uint16_t subsys_vend_id; /* Check skipped if zero. */
+	uint8_t unk1[7];
+	char name[15];
+	uint8_t sign[0x20];
+}
+__attribute__((packed))
+vgpu_unlock_vgpu_t;
+
+static vgpu_unlock_vgpu_t vgpu_unlock_vgpu[] =
+{
+	/* Tesla P40 */
+	{ 2, 0x1007, 0x1b38, 0, 0x11e7, 0, { 0 }, { "GRID P40-1B"  } },
+	{ 2, 0x1007, 0x1b38, 0, 0x11e8, 0, { 0 }, { "GRID P40-1Q"  } },
+	{ 2, 0x1007, 0x1b38, 0, 0x11e9, 0, { 0 }, { "GRID P40-2Q"  } },
+	{ 2, 0x1007, 0x1b38, 0, 0x11ea, 0, { 0 }, { "GRID P40-3Q"  } },
+	{ 2, 0x1007, 0x1b38, 0, 0x11eb, 0, { 0 }, { "GRID P40-4Q"  } },
+	{ 2, 0x1007, 0x1b38, 0, 0x11ec, 0, { 0 }, { "GRID P40-6Q"  } },
+	{ 2, 0x1007, 0x1b38, 0, 0x11ed, 0, { 0 }, { "GRID P40-8Q"  } },
+	{ 2, 0x1007, 0x1b38, 0, 0x11ee, 0, { 0 }, { "GRID P40-12Q" } },
+	{ 2, 0x1007, 0x1b38, 0, 0x11ef, 0, { 0 }, { "GRID P40-24Q" } },
+	{ 2, 0x1007, 0x1b38, 0, 0x11f0, 0, { 0 }, { "GRID P40-1A"  } },
+	{ 2, 0x1007, 0x1b38, 0, 0x11f1, 0, { 0 }, { "GRID P40-2A"  } },
+	{ 2, 0x1007, 0x1b38, 0, 0x11f2, 0, { 0 }, { "GRID P40-3A"  } },
+	{ 2, 0x1007, 0x1b38, 0, 0x11f3, 0, { 0 }, { "GRID P40-4A"  } },
+	{ 2, 0x1007, 0x1b38, 0, 0x11f4, 0, { 0 }, { "GRID P40-6A"  } },
+	{ 2, 0x1007, 0x1b38, 0, 0x11f5, 0, { 0 }, { "GRID P40-8A"  } },
+	{ 2, 0x1007, 0x1b38, 0, 0x11f6, 0, { 0 }, { "GRID P40-12A" } },
+	{ 2, 0x1007, 0x1b38, 0, 0x11f7, 0, { 0 }, { "GRID P40-24A" } },
+	{ 2, 0x1007, 0x1b38, 0, 0x1287, 0, { 0 }, { "GRID P40-2B"  } },
+	{ 2, 0x1007, 0x1b38, 0, 0x12ef, 0, { 0 }, { "GRID P40-2B4" } },
+	{ 2, 0x1007, 0x1b38, 0, 0x133a, 0, { 0 }, { "GRID P40-1B4" } },
+	{ 2, 0x1007, 0x1b38, 0, 0x137e, 0, { 0 }, { "GRID P40-24C" } },
+	{ 2, 0x1007, 0x1b38, 0, 0x1381, 0, { 0 }, { "GRID P40-4C"  } },
+	{ 2, 0x1007, 0x1b38, 0, 0x1382, 0, { 0 }, { "GRID P40-6C"  } },
+	{ 2, 0x1007, 0x1b38, 0, 0x1383, 0, { 0 }, { "GRID P40-8C"  } },
+	{ 2, 0x1007, 0x1b38, 0, 0x1384, 0, { 0 }, { "GRID P40-12C" } },
+
+	/* Tesla P4 */
+	{ 2, 0x1007, 0x1bb3, 0, 0x1203, 0, { 0 }, { "GRID P4-1B"   } },
+	{ 2, 0x1007, 0x1bb3, 0, 0x1204, 0, { 0 }, { "GRID P4-1Q"   } },
+	{ 2, 0x1007, 0x1bb3, 0, 0x1205, 0, { 0 }, { "GRID P4-2Q"   } },
+	{ 2, 0x1007, 0x1bb3, 0, 0x1206, 0, { 0 }, { "GRID P4-4Q"   } },
+	{ 2, 0x1007, 0x1bb3, 0, 0x1207, 0, { 0 }, { "GRID P4-8Q"   } },
+	{ 2, 0x1007, 0x1bb3, 0, 0x1208, 0, { 0 }, { "GRID P4-1A"   } },
+	{ 2, 0x1007, 0x1bb3, 0, 0x1209, 0, { 0 }, { "GRID P4-2A"   } },
+	{ 2, 0x1007, 0x1bb3, 0, 0x120a, 0, { 0 }, { "GRID P4-4A"   } },
+	{ 2, 0x1007, 0x1bb3, 0, 0x120b, 0, { 0 }, { "GRID P4-8A"   } },
+	{ 2, 0x1007, 0x1bb3, 0, 0x1288, 0, { 0 }, { "GRID P4-2B"   } },
+	{ 2, 0x1007, 0x1bb3, 0, 0x12f1, 0, { 0 }, { "GRID P4-2B4"  } },
+	{ 2, 0x1007, 0x1bb3, 0, 0x133c, 0, { 0 }, { "GRID P4-1B4"  } },
+	{ 2, 0x1007, 0x1bb3, 0, 0x1380, 0, { 0 }, { "GRID P4-8C"   } },
+	{ 2, 0x1007, 0x1bb3, 0, 0x1385, 0, { 0 }, { "GRID P4-4C"   } },
+
+	/* Tesla T4 */
+	{ 2, 0x1007, 0x1e30, 0, 0x1309, 0, { 0 }, { "GRID T4-1B"   } },
+	{ 2, 0x1007, 0x1e30, 0, 0x130a, 0, { 0 }, { "GRID T4-2B"   } },
+	{ 2, 0x1007, 0x1e30, 0, 0x130b, 0, { 0 }, { "GRID T4-2B4"  } },
+	{ 2, 0x1007, 0x1e30, 0, 0x130c, 0, { 0 }, { "GRID T4-1Q"   } },
+	{ 2, 0x1007, 0x1e30, 0, 0x130d, 0, { 0 }, { "GRID T4-2Q"   } },
+	{ 2, 0x1007, 0x1e30, 0, 0x130e, 0, { 0 }, { "GRID T4-4Q"   } },
+	{ 2, 0x1007, 0x1e30, 0, 0x130f, 0, { 0 }, { "GRID T4-8Q"   } },
+	{ 2, 0x1007, 0x1e30, 0, 0x1310, 0, { 0 }, { "GRID T4-16Q"  } },
+	{ 2, 0x1007, 0x1e30, 0, 0x1311, 0, { 0 }, { "GRID T4-1A"   } },
+	{ 2, 0x1007, 0x1e30, 0, 0x1312, 0, { 0 }, { "GRID T4-2A"   } },
+	{ 2, 0x1007, 0x1e30, 0, 0x1313, 0, { 0 }, { "GRID T4-4A"   } },
+	{ 2, 0x1007, 0x1e30, 0, 0x1314, 0, { 0 }, { "GRID T4-8A"   } },
+	{ 2, 0x1007, 0x1e30, 0, 0x1315, 0, { 0 }, { "GRID T4-16A"  } },
+	{ 2, 0x1007, 0x1e30, 0, 0x1345, 0, { 0 }, { "GRID T4-1B4"  } },
+	{ 2, 0x1007, 0x1e30, 0, 0x1375, 0, { 0 }, { "GRID T4-16C"  } },
+	{ 2, 0x1007, 0x1e30, 0, 0x139a, 0, { 0 }, { "GRID T4-4C"   } },
+	{ 2, 0x1007, 0x1e30, 0, 0x139b, 0, { 0 }, { "GRID T4-8C"   } },
+
+	{ 0 } /* Sentinel */
+};
 
 static const uint8_t vgpu_unlock_magic_sacrifice[0x10] = {
 	0x46, 0x4f, 0x39, 0x49, 0x74, 0x91, 0xd7, 0x0f,
@@ -618,8 +699,24 @@ static uint16_t vgpu_unlock_pci_devid_to_vgpu_capable(uint16_t pci_devid)
 	/* TU102 */
 	case 0x1e02: /* TITAN RTX */
 	case 0x1e04: /* RTX 2080 Ti */
-	case 0x1e07: /* RTX 2080 Ti */
+	case 0x1e07: /* RTX 2080 Ti Rev. A*/
 		return 0x1e30; /* Quadro RTX 6000 */
+
+	/* TU104 */
+	case 0x1e81: /* RTX 2080 Super */
+	case 0x1e82: /* RTX 2080 */
+	case 0x1e84: /* RTX 2070 Super */
+	case 0x1e87: /* RTX 2080 Rev. A */
+	case 0x1e89: /* RTX 2060 */
+	case 0x1eb0: /* Quadro RTX 5000 */
+	case 0x1eb1: /* Quadro RTX 4000 */
+		return 0x1eb8; /* Tesla P4 */
+
+	/* GA102 */
+	case 0x2204: /* RTX 3090 */
+	case 0x2205: /* RTX 3080 Ti */
+	case 0x2206: /* RTX 3080 */
+		return 0x2235; /* RTX A40 */
 	}
 
 	return pci_devid;
@@ -650,8 +747,8 @@ static void *vgpu_unlock_find_in_rodata(const void *val, size_t size)
 {
 	uint8_t *i;
 
-	for (i = (uint8_t*)&vgpu_unlock_nv_kern_rodata_beg;
-	     i < (uint8_t*)&vgpu_unlock_nv_kern_rodata_end - size;
+	for (i = &vgpu_unlock_nv_kern_rodata_beg;
+	     i < &vgpu_unlock_nv_kern_rodata_end - size;
 	     i++)
 	{
 		if (vgpu_unlock_memcmp(val, i, size) == 0)
@@ -694,6 +791,10 @@ static void vgpu_unlock_apply_patch(void)
 	void **sac_sign_ptr;
 	vgpu_unlock_aes128_ctx aes_ctx;
 	uint16_t *pci_info;
+	vgpu_unlock_vgpu_t* vgpu;
+	uint8_t first_block[0x10];
+	uint16_t device_id;
+	char* name;
 	
 	magic = vgpu_unlock_find_in_rodata(vgpu_unlock_magic,
 	                                   sizeof(vgpu_unlock_magic));
@@ -784,39 +885,52 @@ static void vgpu_unlock_apply_patch(void)
 		goto failed;
 	}
 
-	memcpy(sac_magic, vgpu_unlock_magic, sizeof(vgpu_unlock_magic));
-	memcpy(*sac_blocks_ptr, *blocks_ptr, num_blocks * 0x10 + 1);
-
+	/* Decrypt the first block so we can access the PCI device ID. */
+	memcpy(first_block, (uint8_t*)*blocks_ptr + 1, sizeof(first_block));
 	vgpu_unlock_aes128_init(&aes_ctx, vgpu_unlock_key);
-	
-	for (i = 0; i < num_blocks; i++)
+	vgpu_unlock_aes128_decrypt(&aes_ctx, first_block);
+	LOG(KERN_WARNING "Decrypted first block is: %16ph.\n",
+	    first_block);
+
+	device_id = *((uint16_t*)first_block + 1);
+	device_id = vgpu_unlock_pci_devid_to_vgpu_capable(device_id);
+
+	/* Loop over all vGPUs and add the ones that match our device ID. */
+	vgpu = vgpu_unlock_vgpu;
+
+	while (vgpu->num_blocks != 0)
 	{
-		vgpu_unlock_aes128_decrypt(&aes_ctx,
-		                           (uint8_t*)*sac_blocks_ptr + 1 + i * 0x10);
-		LOG(KERN_WARNING "Decrypted block is: %16ph.\n",
-		    (uint8_t*)*sac_blocks_ptr + 1 + i * 0x10);
+		if (vgpu->dev_id != device_id)
+		{
+			vgpu++;
+			continue;
+		}
+
+		num_blocks = vgpu->num_blocks;
+
+		*sac_magic_ptr = vgpu_unlock_magic;
+		*sac_blocks_ptr = vgpu;
+		*sac_sign_ptr = &vgpu->sign;
+
+		vgpu_unlock_aes128_init(&aes_ctx, vgpu_unlock_key);
+
+		for (i = 0; i < num_blocks; i++)
+		{
+			vgpu_unlock_aes128_encrypt(&aes_ctx,
+			                           (uint8_t*)vgpu + 1 + i * 0x10);
+		}
+
+		vgpu_unlock_hmac_sha256(&vgpu->sign,
+		                        vgpu,
+		                        1 + num_blocks * 0x10,
+		                        vgpu_unlock_key,
+		                        sizeof(vgpu_unlock_key));
+
+		sac_magic_ptr += 3;
+		sac_blocks_ptr = sac_magic_ptr + 1;
+		sac_sign_ptr = sac_magic_ptr + 2;
+		vgpu++;
 	}
-
-	pci_info = (uint16_t*)((uint8_t*)*sac_blocks_ptr + 1);
-
-	pci_info[1] = vgpu_unlock_pci_devid_to_vgpu_capable(pci_info[1]);
-	pci_info[2] = 0;
-	pci_info[3] = 0x11ec;
-	pci_info[4] = 0;
-
-	vgpu_unlock_aes128_init(&aes_ctx, vgpu_unlock_key);
-
-	for (i = 0; i < num_blocks; i++)
-	{
-		vgpu_unlock_aes128_encrypt(&aes_ctx,
-		                           (uint8_t*)*sac_blocks_ptr + 1 + i * 0x10);
-	}
-
-	vgpu_unlock_hmac_sha256(*sac_sign_ptr,
-	                        *sac_blocks_ptr,
-	                        1 + num_blocks * 0x10,
-	                        vgpu_unlock_key,
-	                        sizeof(vgpu_unlock_key));
 
 	vgpu_unlock_patch_applied = TRUE;
 
