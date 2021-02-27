@@ -40,8 +40,10 @@ script_source = r"""
 
     // These are the observed values for the op_type member.
     var OP_READ_DEV_TYPE = 0x800289; // *result type is uint64_t.
-    var OP_READ_PCI_ID = 0x20801801; // *result type in uint32_t, the uppper 16
-                                     // bits is the device ID.
+    var OP_READ_PCI_ID = 0x20801801; // *result type is uint16_t[4], the second
+                                     // element (index 1) is the device ID, the
+                                     // forth element (index 3) is the subsystem
+                                     // ID.
 
     // nvidia-vgpu-mgr expects this value for a vGPU capable GPU.
     var DEV_TYPE_VGPU_CAPABLE = uint64(3);
@@ -55,7 +57,6 @@ script_source = r"""
 
     Interceptor.attach(Module.getExportByName(null, "ioctl"), {
         onEnter(args) {
-            console.log("ioctl called");
             this.request = args[1];
             this.argp = args[2];
         },
@@ -81,15 +82,17 @@ script_source = r"""
             var op_type = this.argp.add(8).readU32();
 
             if(op_type == OP_READ_PCI_ID) {
-                // Lookup address of the device ID, note that we point directly at
-                // the upper 16 bits of the word.
+                // Lookup address of the device and subsystem IDs.
                 var devid_ptr = this.argp.add(0x10).readPointer().add(2);
+                var subsysid_ptr = this.argp.add(0x10).readPointer().add(6);
 
                 // Now we replace the device ID with a spoofed value that needs to
                 // be determined such that the spoofed value represents a GPU with
                 // vGPU support that uses the same GPU chip as our actual GPU.
                 var actual_devid = devid_ptr.readU16();
                 var spoofed_devid = actual_devid;
+                var actual_subsysid = subsysid_ptr.readU16();
+                var spoofed_subsysid = actual_subsysid;
 
                 // GP102
                 if(actual_devid == 0x1b00 || // TITAN X (Pascal)
@@ -114,6 +117,7 @@ script_source = r"""
                    actual_devid == 0x1e04 || // RTX 2080 Ti
                    actual_devid == 0x1e07) { // RTX 2080 Ti Rev. A
                     spoofed_devid = 0x1e30; // Quadro RTX 6000
+                    spoofed_subsysid = 0x12ba;
                 }
 
                 // TU104
@@ -135,6 +139,7 @@ script_source = r"""
                 }
 
                 devid_ptr.writeU16(spoofed_devid);
+                subsysid_ptr.writeU16(spoofed_subsysid);
             }
             
             if(op_type == OP_READ_DEV_TYPE) {
