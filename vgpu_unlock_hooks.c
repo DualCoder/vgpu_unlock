@@ -567,11 +567,6 @@ static void vgpu_unlock_hmac_sha256(void* dst,
 	#define LOG(...)
 #endif
 
-#define VGPU_UNLOCK_MAGIC_PHYS_BEG (0xf0029624)
-#define VGPU_UNLOCK_MAGIC_PHYS_END (VGPU_UNLOCK_MAGIC_PHYS_BEG + 0x10)
-#define VGPU_UNLOCK_KEY_PHYS_BEG   (0xf0029634)
-#define VGPU_UNLOCK_KEY_PHYS_END   (VGPU_UNLOCK_KEY_PHYS_BEG + 0x10)
-
 typedef struct {
 	uint8_t num_blocks; /* Number of 16 byte blocks up to 'sign'. */
 	uint16_t unk0;
@@ -678,6 +673,11 @@ static vgpu_unlock_vgpu_t vgpu_unlock_vgpu[] =
 	{ 0 } /* Sentinel */
 };
 
+static const uint8_t vgpu_unlock_magic_start[0x10] = {
+	0xf3, 0xf5, 0x9e, 0x3d, 0x13, 0x91, 0x75, 0x18,
+	0x6a, 0x7b, 0x55, 0xed, 0xce, 0x5d, 0x84, 0x67
+};
+
 static const uint8_t vgpu_unlock_magic_sacrifice[0x10] = {
 	0x46, 0x4f, 0x39, 0x49, 0x74, 0x91, 0xd7, 0x0f,
 	0xbc, 0x65, 0xc2, 0x70, 0xdd, 0xdd, 0x11, 0x54
@@ -685,15 +685,13 @@ static const uint8_t vgpu_unlock_magic_sacrifice[0x10] = {
 
 static bool vgpu_unlock_patch_applied = FALSE;
 
-static bool vgpu_unlock_magic_mapped = FALSE;
-static uint64_t vgpu_unlock_magic_beg;
-static uint64_t vgpu_unlock_magic_end;
+static bool vgpu_unlock_bar3_mapped = FALSE;
+static uint64_t vgpu_unlock_bar3_beg;
+static uint64_t vgpu_unlock_bar3_end;
+
 static uint8_t vgpu_unlock_magic[0x10];
 static bool vgpu_unlock_magic_found = FALSE;
 
-static bool vgpu_unlock_key_mapped = FALSE;
-static uint64_t vgpu_unlock_key_beg;
-static uint64_t vgpu_unlock_key_end;
 static uint8_t vgpu_unlock_key[0x10];
 static bool vgpu_unlock_key_found = FALSE;
 
@@ -801,6 +799,74 @@ static bool vgpu_unlock_range_contained_in(uint64_t a_beg,
 	       vgpu_unlock_in_range(a_end, b_beg, b_end);
 }
 
+/* Check if an address points into a specific BAR of an NVIDIA GPU. */
+static bool vgpu_unlock_in_bar(uint64_t addr, int bar)
+{
+	struct pci_dev *dev = NULL;
+
+	while (1)
+	{
+		dev = pci_get_device(0x10de, PCI_ANY_ID, dev);
+
+		if (dev)
+		{
+			if (vgpu_unlock_in_range(addr,
+			                         pci_resource_start(dev, bar),
+			                         pci_resource_end(dev, bar)))
+			{
+				return TRUE;
+			}
+		}
+		else
+		{
+			return FALSE;
+		}
+	}
+}
+
+/* Check if a potential magic value is valid. */
+static bool vgpu_unlock_magic_valid(const uint8_t *magic)
+{
+	void **gpu_list_item;
+
+	static void **gpu_list_start = NULL;
+
+	if (!gpu_list_start)
+	{
+		void *magic_start = vgpu_unlock_find_in_rodata(vgpu_unlock_magic_start,
+		                                               sizeof(vgpu_unlock_magic_start));
+
+		if (!magic_start)
+		{
+			LOG(KERN_ERR "Failed to find start of gpu list in .rodata\n");
+			return NULL;
+		}
+
+		gpu_list_start = (void**)vgpu_unlock_find_in_rodata(&magic_start,
+		                                                    sizeof(magic_start));
+
+		if (!gpu_list_start)
+		{
+			LOG(KERN_ERR "Failed to find pointer to start of gpu list in .rodata\n");
+			return NULL;
+		}
+	}
+
+	for (gpu_list_item = gpu_list_start;
+	     vgpu_unlock_in_range((uint64_t)*gpu_list_item,
+	                          (uint64_t)&vgpu_unlock_nv_kern_rodata_beg,
+	                          (uint64_t)&vgpu_unlock_nv_kern_rodata_end);
+	     gpu_list_item += 3)
+	{
+		if (memcmp(magic, *gpu_list_item, 0x10) == 0)
+		{
+			return TRUE;
+		}
+	}
+
+	return FALSE;
+}
+
 static void vgpu_unlock_apply_patch(void)
 {
 	uint8_t i;
@@ -815,11 +881,9 @@ static void vgpu_unlock_apply_patch(void)
 	void **sac_blocks_ptr;
 	void **sac_sign_ptr;
 	vgpu_unlock_aes128_ctx aes_ctx;
-	uint16_t *pci_info;
 	vgpu_unlock_vgpu_t* vgpu;
 	uint8_t first_block[0x10];
 	uint16_t device_id;
-	char* name;
 	
 	magic = vgpu_unlock_find_in_rodata(vgpu_unlock_magic,
 	                                   sizeof(vgpu_unlock_magic));
@@ -964,42 +1028,37 @@ static void vgpu_unlock_apply_patch(void)
 	return;
 
 failed:
-	vgpu_unlock_magic_mapped = FALSE;
 	vgpu_unlock_magic_found = FALSE;
-	vgpu_unlock_key_mapped = FALSE;
 	vgpu_unlock_key_found = FALSE;
 }
 
 static void *vgpu_unlock_memcpy_hook(void *dst, const void *src, size_t count)
 {
+	bool src_in_bar3 = vgpu_unlock_bar3_mapped &&
+	                   vgpu_unlock_in_range((uint64_t)src,
+	                                        vgpu_unlock_bar3_beg,
+	                                        vgpu_unlock_bar3_end);
+
 	void *result = memcpy(dst, src, count);
 
-	if (!vgpu_unlock_magic_found &&
-	    vgpu_unlock_magic_mapped &&
-	    vgpu_unlock_range_contained_in(vgpu_unlock_magic_beg,
-	                                   vgpu_unlock_magic_end,
-	                                   (uint64_t)src,
-	                                   (uint64_t)src + count))
+	if (src_in_bar3 &&
+	    count == sizeof(vgpu_unlock_magic) &&
+	    !vgpu_unlock_magic_found &&
+	    vgpu_unlock_magic_valid(dst))
 	{
-		memcpy(vgpu_unlock_magic,
-		       (void*)vgpu_unlock_magic_beg,
-		       sizeof(vgpu_unlock_magic));
+		memcpy(vgpu_unlock_magic, dst, count);
 		vgpu_unlock_magic_found = TRUE;
 
 		LOG(KERN_WARNING "Magic found: %16ph\n",
 		    vgpu_unlock_magic);
-	}
 
-	if (!vgpu_unlock_key_found &&
-	    vgpu_unlock_key_mapped &&
-	    vgpu_unlock_range_contained_in(vgpu_unlock_key_beg,
-	                                   vgpu_unlock_key_end,
-	                                   (uint64_t)src,
-	                                   (uint64_t)src + count))
+	}
+	else if (src_in_bar3 &&
+	         count == sizeof(vgpu_unlock_key) &&
+	         vgpu_unlock_magic_found &&
+	         !vgpu_unlock_key_found)
 	{
-		memcpy(vgpu_unlock_key,
-		       (void*)vgpu_unlock_key_beg,
-		       sizeof(vgpu_unlock_key));
+		memcpy(vgpu_unlock_key, dst, count);
 		vgpu_unlock_key_found = TRUE;
 
 		LOG(KERN_WARNING "Key found: %16ph\n",
@@ -1024,35 +1083,14 @@ static void vgpu_unlock_check_map(uint64_t phys_addr,
 	LOG(KERN_WARNING "Remap called.\n");
 
 	if (virt_addr &&
-	    !vgpu_unlock_magic_mapped &&
-	    vgpu_unlock_range_contained_in(VGPU_UNLOCK_MAGIC_PHYS_BEG,
-	                                   VGPU_UNLOCK_MAGIC_PHYS_END,
-	                                   phys_addr,
-	                                   phys_addr + size))
+	    !vgpu_unlock_bar3_mapped &&
+	    vgpu_unlock_in_bar(phys_addr, 3))
 	{
-		uint64_t offset_beg = VGPU_UNLOCK_MAGIC_PHYS_BEG - phys_addr;
-		uint64_t offset_end = VGPU_UNLOCK_MAGIC_PHYS_END - phys_addr;
-		vgpu_unlock_magic_beg = (uint64_t)virt_addr + offset_beg;
-		vgpu_unlock_magic_end = (uint64_t)virt_addr + offset_end;
-		vgpu_unlock_magic_mapped = TRUE;
-		LOG(KERN_WARNING "Magic mapped at: 0x%llX\n",
-		    vgpu_unlock_magic_beg);
-	}
-
-	if (virt_addr &&
-	    !vgpu_unlock_key_mapped &&
-	    vgpu_unlock_range_contained_in(VGPU_UNLOCK_KEY_PHYS_BEG,
-	                                   VGPU_UNLOCK_KEY_PHYS_END,
-	                                   phys_addr,
-	                                   phys_addr + size))
-	{
-		uint64_t offset_beg = VGPU_UNLOCK_KEY_PHYS_BEG - phys_addr;
-		uint64_t offset_end = VGPU_UNLOCK_KEY_PHYS_END - phys_addr;
-		vgpu_unlock_key_beg = (uint64_t)virt_addr + offset_beg;
-		vgpu_unlock_key_end = (uint64_t)virt_addr + offset_end;
-		vgpu_unlock_key_mapped = TRUE;
-		LOG(KERN_WARNING "Key mapped at: 0x%llX\n",
-		    vgpu_unlock_key_beg);
+		vgpu_unlock_bar3_beg = (uint64_t)virt_addr;
+		vgpu_unlock_bar3_end = (uint64_t)virt_addr + size;
+		vgpu_unlock_bar3_mapped = TRUE;
+		LOG(KERN_WARNING "BAR3 mapped at: 0x%llX\n",
+		    vgpu_unlock_bar3_beg);
 	}
 }
 
