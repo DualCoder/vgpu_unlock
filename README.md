@@ -21,8 +21,8 @@ a software limitation for those GPUs. This tool aims to remove this limitation.
 * This tool requires Python3, the latest version is recommended.
 * The python package "frida" is required. `pip3 install frida`.
 * The tool requires the NVIDIA GRID vGPU driver.
-* "dkms" is highly recommended as it simplifies the process of rebuilding the
-  driver alot.
+* "dkms" is required as it simplifies the process of rebuilding the
+  driver alot. Install DKMS with the package manager in your OS.
 
 
 ## Installation:
@@ -33,7 +33,7 @@ replaced with the version of the NVIDIA GRID vGPU driver.
 
 Install the NVIDIA GRID vGPU driver, make sure to install it as a dkms module.
 ```
-./nvidia-installer
+./nvidia-installer --dkms
 ```
 
 Modify the line begining with `ExecStart=` in `/lib/systemd/system/nvidia-vgpud.service`
@@ -56,7 +56,7 @@ file.
 ```
 
 Modify the file `/usr/src/nvidia-<version>/nvidia/nvidia.Kbuild` and add the
-following line.
+following line at the bottom of the file.
 ```
 ldflags-y += -T <path_to_vgpu_unlock>/kern.ld
 ```
