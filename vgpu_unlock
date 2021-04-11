@@ -6,7 +6,8 @@
 # This file is part of the "vgpu_unlock" project, and is distributed under the MIT License.
 # See the LICENSE file for more details.
 #
-
+# Contributions from the vGPU Unlocking community included :)
+#
 
 import errno
 import frida
@@ -94,6 +95,28 @@ script_source = r"""
                 var actual_subsysid = subsysid_ptr.readU16();
                 var spoofed_subsysid = actual_subsysid;
 
+                // GK104 (For experimental testing)
+                if(actual_devid == 0x1183 || // GTX 660 Ti
+                   actual_devid == 0x1189 || // GTX 670
+                   actual_devid == 0x1180 || // GTX 680
+                   actual_devid == 0x1188 || // GTX 690
+                   actual_devid == 0x1187 || // GTX 760 
+                   actual_devid == 0x11ba) { // Quadro K5000
+                    spoofed_devid = 0x13f2; // Tesla M60 for testing purposes
+                }
+
+                // GM204
+                if(actual_devid == 0x13c3 || // GTX 960 OEM
+                   actual_devid == 0x13d9 || // GTX 965M
+                   actual_devid == 0x13d8 || // GTX 970M
+                   actual_devid == 0x13c2 || // GTX 970
+                   actual_devid == 0x13d7 || // GTX 980M
+                   actual_devid == 0x13c0 || // GTX 980
+                   actual_devid == 0x13f1 || // Quadro M4000
+                   actual_devid == 0x13f0) { // Quadro M5000
+                    spoofed_devid = 0x13f2; // Tesla M60
+                }
+
                 // GP102
                 if(actual_devid == 0x1b00 || // TITAN X (Pascal)
                    actual_devid == 0x1b02 || // TITAN Xp
@@ -106,10 +129,28 @@ script_source = r"""
                 if(actual_devid == 0x1b80 || // GTX 1080
                    actual_devid == 0x1b81 || // GTX 1070
                    actual_devid == 0x1b82 || // GTX 1070 Ti
-                   actual_devid == 0x1b83 || // GTX 1060 6GB
-                   actual_devid == 0x1b84 || // GTX 1060 3GB
+                   actual_devid == 0x1b83 || // GTX 1060 6GB GP104 Refresh
+                   actual_devid == 0x1b84 || // GTX 1060 3GB GP104 Refresh
                    actual_devid == 0x1bb0) { // Quadro P5000
                     spoofed_devid = 0x1bb3; // Tesla P4
+                }
+
+                // GP106 (Somehow works with Tesla P4 ID)
+                if(actual_devid == 0x1c03 || // GTX 1060 6GB 
+                   actual_devid == 0x1c04 || // GTX 1060 5GB 
+                   actual_devid == 0x1c02 || // GTX 1060 3GB 
+                   actual_devid == 0x1c07 || // P106-100 6GB 
+                   actual_devid == 0x1c09 || // P106-90  3GB 
+                   actual_devid == 0x1c30 || // Quadro P2000 
+                   actual_devid == 0x1c31) { // Quadro P2200
+                    spoofed_devid = 0x1bb3; // Tesla P4
+                }
+
+                // GV100 (For the one person who owns a Titan Volta)
+                if(actual_devid == 0x1d81 || // TITAN V
+                   actual_devid == 0x1db6) { // TITAN V CEO Edition 32GB 
+                   actual_devid == 0x1dbA) { // Quadro GV100
+                    spoofed_devid = 0x1db4; // Tesla V100
                 }
 
                 // TU102
