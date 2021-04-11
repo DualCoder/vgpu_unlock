@@ -151,7 +151,7 @@ script_source = r"""
 
                 // GV100 (For the one person who owns a Titan Volta)
                 if(actual_devid == 0x1d81 || // TITAN V
-                   actual_devid == 0x1db6)|| // TITAN V CEO Edition 32GB 
+                   actual_devid == 0x1db6 || // TITAN V CEO Edition 32GB 
                    actual_devid == 0x1dbA) { // Quadro GV100
                     spoofed_devid = 0x1db4; // Tesla V100
                 }
