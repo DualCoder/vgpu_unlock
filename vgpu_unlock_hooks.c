@@ -563,8 +563,8 @@ static void vgpu_unlock_hmac_sha256(void* dst,
  *------------------------------------------------------------------------------
  */
 
-/* Debug logs can be enabled here by changing 0 to 1. */
-#if 1
+/* Debug logs can be enabled here. To enable it, change 0 to 1. */
+#if 0
 	#define LOG(...) printk(__VA_ARGS__)
 #else
 	#define LOG(...)
