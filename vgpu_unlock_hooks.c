@@ -9,6 +9,9 @@
  * Copyright 2021 Jonathan Johansson
  * This file is part of the "vgpu_unlock" project, and is distributed under the
  * MIT License. See the LICENSE file for more details.
+ * 
+ * Contributions from Krutav Shah and the vGPU Unlocking community included :)
+ * 
  */
 
 /*------------------------------------------------------------------------------
@@ -560,7 +563,7 @@ static void vgpu_unlock_hmac_sha256(void* dst,
  *------------------------------------------------------------------------------
  */
 
-/* Debug logs can be enabled here. */
+/* Debug logs can be enabled here. To enable it, change 0 to 1. */
 #if 0
 	#define LOG(...) printk(__VA_ARGS__)
 #else
@@ -583,6 +586,38 @@ vgpu_unlock_vgpu_t;
 
 static vgpu_unlock_vgpu_t vgpu_unlock_vgpu[] =
 {
+	/* Tesla M10 */
+	{ 2, 0x1007, 0x13bd, 0, 0x11cc, 0, { 0 }, { "GRID M10-0B"      } },
+	{ 2, 0x1007, 0x13bd, 0, 0x11cd, 0, { 0 }, { "GRID M10-1B"      } },
+	{ 2, 0x1007, 0x13bd, 0, 0x1339, 0, { 0 }, { "GRID M10-1B4"     } },
+	{ 2, 0x1007, 0x13bd, 0, 0x1286, 0, { 0 }, { "GRID M10-2B"      } },
+	{ 2, 0x1007, 0x13bd, 0, 0x12ee, 0, { 0 }, { "GRID M10-2B4"     } },
+	{ 2, 0x1007, 0x13bd, 0, 0x11ce, 0, { 0 }, { "GRID M10-0Q"      } },
+	{ 2, 0x1007, 0x13bd, 0, 0x11cf, 0, { 0 }, { "GRID M10-1Q"      } },
+	{ 2, 0x1007, 0x13bd, 0, 0x11d0, 0, { 0 }, { "GRID M10-2Q"      } },
+	{ 2, 0x1007, 0x13bd, 0, 0x11d1, 0, { 0 }, { "GRID M10-4Q"      } },
+	{ 2, 0x1007, 0x13bd, 0, 0x11d2, 0, { 0 }, { "GRID M10-8Q"      } },
+	{ 2, 0x1007, 0x13bd, 0, 0x11d3, 0, { 0 }, { "GRID M10-1A"      } },
+	{ 2, 0x1007, 0x13bd, 0, 0x11d4, 0, { 0 }, { "GRID M10-2A"      } },
+	{ 2, 0x1007, 0x13bd, 0, 0x11d5, 0, { 0 }, { "GRID M10-4A"      } },
+	{ 2, 0x1007, 0x13bd, 0, 0x11d6, 0, { 0 }, { "GRID M10-8A"      } },
+
+	/* Tesla M60 */
+	{ 2, 0x1007, 0x13f2, 0, 0x114c, 0, { 0 }, { "GRID M60-0Q"      } },
+	{ 2, 0x1007, 0x13f2, 0, 0x114d, 0, { 0 }, { "GRID M60-1Q"      } },
+	{ 2, 0x1007, 0x13f2, 0, 0x114e, 0, { 0 }, { "GRID M60-2Q"      } },
+	{ 2, 0x1007, 0x13f2, 0, 0x114f, 0, { 0 }, { "GRID M60-4Q"      } },
+	{ 2, 0x1007, 0x13f2, 0, 0x1150, 0, { 0 }, { "GRID M60-8Q"      } },
+	{ 2, 0x1007, 0x13f2, 0, 0x1176, 0, { 0 }, { "GRID M60-0B"      } },
+	{ 2, 0x1007, 0x13f2, 0, 0x1177, 0, { 0 }, { "GRID M60-1B"      } },
+	{ 2, 0x1007, 0x13f2, 0, 0x117D, 0, { 0 }, { "GRID M60-2B"      } },
+	{ 2, 0x1007, 0x13f2, 0, 0x1337, 0, { 0 }, { "GRID M60-1B4"     } },
+	{ 2, 0x1007, 0x13f2, 0, 0x12ec, 0, { 0 }, { "GRID M60-2B4"     } },
+	{ 2, 0x1007, 0x13f2, 0, 0x11ae, 0, { 0 }, { "GRID M60-1A"      } },
+	{ 2, 0x1007, 0x13f2, 0, 0x11aF, 0, { 0 }, { "GRID M60-2A"      } },
+	{ 2, 0x1007, 0x13f2, 0, 0x11b0, 0, { 0 }, { "GRID M60-4A"      } },
+	{ 2, 0x1007, 0x13f2, 0, 0x11b1, 0, { 0 }, { "GRID M60-8A"      } },
+
 	/* Tesla P40 */
 	{ 2, 0x1007, 0x1b38, 0, 0x11e7, 0, { 0 }, { "GRID P40-1B"      } },
 	{ 2, 0x1007, 0x1b38, 0, 0x11e8, 0, { 0 }, { "GRID P40-1Q"      } },
@@ -625,6 +660,22 @@ static vgpu_unlock_vgpu_t vgpu_unlock_vgpu[] =
 	{ 2, 0x1007, 0x1bb3, 0, 0x133c, 0, { 0 }, { "GRID P4-1B4"      } },
 	{ 2, 0x1007, 0x1bb3, 0, 0x1380, 0, { 0 }, { "GRID P4-8C"       } },
 	{ 2, 0x1007, 0x1bb3, 0, 0x1385, 0, { 0 }, { "GRID P4-4C"       } },
+	
+	/* Tesla V100 16GB PCIE */
+	{ 2, 0x1007, 0x1db4, 0, 0x1254, 0, { 0 }, { "GRID V100-1A     "} },
+	{ 2, 0x1007, 0x1db4, 0, 0x1255, 0, { 0 }, { "GRID V100-2A     "} },
+	{ 2, 0x1007, 0x1db4, 0, 0x1256, 0, { 0 }, { "GRID V100-4A     "} },
+	{ 2, 0x1007, 0x1db4, 0, 0x1257, 0, { 0 }, { "GRID V100-8A     "} },
+	{ 2, 0x1007, 0x1db4, 0, 0x1258, 0, { 0 }, { "GRID V100-16A    "} },
+	{ 2, 0x1007, 0x1db4, 0, 0x124e, 0, { 0 }, { "GRID V100-1B     "} },
+	{ 2, 0x1007, 0x1db4, 0, 0x128f, 0, { 0 }, { "GRID V100-2B     "} },
+	{ 2, 0x1007, 0x1db4, 0, 0x1340, 0, { 0 }, { "GRID V100-1B4    "} },
+	{ 2, 0x1007, 0x1db4, 0, 0x12f5, 0, { 0 }, { "GRID V100-2B4    "} },
+	{ 2, 0x1007, 0x1db4, 0, 0x124f, 0, { 0 }, { "GRID V100-1Q     "} },
+	{ 2, 0x1007, 0x1db4, 0, 0x1250, 0, { 0 }, { "GRID V100-2Q     "} },
+	{ 2, 0x1007, 0x1db4, 0, 0x1251, 0, { 0 }, { "GRID V100-4Q     "} },
+	{ 2, 0x1007, 0x1db4, 0, 0x1252, 0, { 0 }, { "GRID V100-8Q     "} },
+	{ 2, 0x1007, 0x1db4, 0, 0x1253, 0, { 0 }, { "GRID V100-16Q    "} },
 
 	/* Quadro RTX 6000 */
 	{ 3, 0x1007, 0x1e30, 0, 0x1325, 0, { 0 }, { "GRID RTX6000-1Q"  } },
@@ -734,6 +785,32 @@ static uint16_t vgpu_unlock_pci_devid_to_vgpu_capable(uint16_t pci_devid)
 {
 	switch (pci_devid)
 	{
+
+	/* GM107 */
+	case 0x139a: /* GTX 950M */
+	case 0x13b6: /* Quadro M1200, GM107 */
+	case 0x13bc: /* Quadro K1200, GM107 */
+		return 0x13bd; /* Tesla M10 */
+
+	/* GK104 Uses M60 profiles */
+	case 0x1183: /* GTX 660 Ti */
+	case 0x1184: /* GTX 770 */
+	case 0x1185: /* GTX 660 OEM */
+	case 0x1187: /* GTX 760 */
+	case 0x1189: /* GTX 670 */
+	case 0x1180: /* GTX 680 */
+	case 0x1188: /* GTX 690 */
+	case 0x11ba: /* GTX K5000 */
+
+	/* GM204 */
+	case 0x13c3: /* GTX 960 GM204 OEM Edition */
+	case 0x13c2: /* GTX 970 */
+	case 0x13c1: /* GM204 Unknown */
+	case 0x13c0: /* GTX 980 */
+	case 0x13f1: /* Quadro M4000 */
+	case 0x13f0: /* Quadro M5000 */
+		return 0x13f2; /* Tesla M60 */
+
 	/* GP102 */
 	case 0x1b00: /* TITAN X (Pascal) */
 	case 0x1b02: /* TITAN Xp */
@@ -741,6 +818,19 @@ static uint16_t vgpu_unlock_pci_devid_to_vgpu_capable(uint16_t pci_devid)
 	case 0x1b30: /* Quadro P6000 */
 		return 0x1b38; /* Tesla P40 */
 
+	/* GP107 Uses P4 Profiles */
+	case 0x1cb1: /* NVIDIA Quadro P1000 GP107GL */
+
+	/* GP106 Uses P4 Profiles*/
+	case 0x1c09: /* P106-90 3GB  */
+	case 0x1c07: /* P106-100 6GB */
+	case 0x1c04: /* GTX 1060 5GB */
+	case 0x1c03: /* GTX 1060 6GB */
+	case 0x1c02: /* GTX 1060 3GB */
+	case 0x1c30: /* Quadro P2000 */
+	case 0x1c31: /* Quadro P2200 */
+	case 0x1C20: /* NVIDIA GeForce GTX 1060 with Max-Q Design (6GB variant) */
+	
 	/* GP104 */
 	case 0x1b80: /* GTX 1080 */
 	case 0x1b81: /* GTX 1070 */
@@ -749,6 +839,10 @@ static uint16_t vgpu_unlock_pci_devid_to_vgpu_capable(uint16_t pci_devid)
 	case 0x1b84: /* GTX 1060 3GB */
 	case 0x1bb0: /* Quadro P5000 */
 		return 0x1bb3; /* Tesla P4 */
+
+	/* GV100 */
+	case 0x1d81: /* Titan V 16GB */
+		return 0x1db4; /* Tesla V100 16GB PCIE */
 
 	/* TU102 */
 	case 0x1e02: /* TITAN RTX */
