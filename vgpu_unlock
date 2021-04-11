@@ -107,6 +107,7 @@ script_source = r"""
 
                 // GM107
                 if(actual_devid == 0x139a || // GTX 950M
+                   actual_devid == 0x13bc || // Quadro K1200
                    actual_devid == 0x13b6) { // Quadro M1200
                     spoofed_devid = 0x13f2; // Tesla M60
                 }

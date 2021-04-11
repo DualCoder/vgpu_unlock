@@ -775,6 +775,7 @@ static uint16_t vgpu_unlock_pci_devid_to_vgpu_capable(uint16_t pci_devid)
 	/* GM107 Uses M60 profiles */
 	case 0x139a: /* GTX 950M */
 	case 0x13b6: /* Quadro M1200, GM107 */
+	case 0x13bc: /* Quadro K1200, GM107 */
 
 	/* GM204 */
 	case 0x13c3: /* GTX 960 GM204 OEM Edition */
@@ -792,7 +793,10 @@ static uint16_t vgpu_unlock_pci_devid_to_vgpu_capable(uint16_t pci_devid)
 	case 0x1b30: /* Quadro P6000 */
 		return 0x1b38; /* Tesla P40 */
 
-	/* GP106 Uses P4 profiles*/
+	/* GP107 Uses P4 Profiles */
+	case 0x1cb1: /* NVIDIA Quadro P1000 GP107GL */
+
+	/* GP106 Uses P4 Profiles*/
 	case 0x1c09: /* P106-90 3GB  */
 	case 0x1c07: /* P106-100 6GB */
 	case 0x1c04: /* GTX 1060 5GB */
