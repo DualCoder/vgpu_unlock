@@ -6,7 +6,7 @@
 # This file is part of the "vgpu_unlock" project, and is distributed under the MIT License.
 # See the LICENSE file for more details.
 #
-# Contributions from the vGPU Unlocking community included :)
+# Contributions from Krutav Shah and the vGPU Unlocking community included :)
 #
 
 import errno
@@ -105,8 +105,15 @@ script_source = r"""
                     spoofed_devid = 0x13f2; // Tesla M60 for testing purposes
                 }
 
+                // GM107
+                if(actual_devid == 0x139a || // GTX 950M
+                   actual_devid == 0x13b6) { // Quadro M1200
+                    spoofed_devid = 0x13f2; // Tesla M60
+                }
+
+
                 // GM204
-                if(actual_devid == 0x13c3 || // GTX 960 OEM
+                if(actual_devid == 0x13c3 || // GTX 960 GM204 OEM Edition
                    actual_devid == 0x13d9 || // GTX 965M
                    actual_devid == 0x13d8 || // GTX 970M
                    actual_devid == 0x13c2 || // GTX 970
@@ -148,7 +155,7 @@ script_source = r"""
 
                 // GV100 (For the one person who owns a Titan Volta)
                 if(actual_devid == 0x1d81 || // TITAN V
-                   actual_devid == 0x1db6) { // TITAN V CEO Edition 32GB 
+                   actual_devid == 0x1db6)|| // TITAN V CEO Edition 32GB 
                    actual_devid == 0x1dbA) { // Quadro GV100
                     spoofed_devid = 0x1db4; // Tesla V100
                 }
