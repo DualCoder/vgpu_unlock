@@ -586,6 +586,22 @@ vgpu_unlock_vgpu_t;
 
 static vgpu_unlock_vgpu_t vgpu_unlock_vgpu[] =
 {
+	/* Tesla M10 */
+	{ 2, 0x1007, 0x13bd, 0, 0x11cc, 0, { 0 }, { "GRID M10-0B"      } },
+	{ 2, 0x1007, 0x13bd, 0, 0x11cd, 0, { 0 }, { "GRID M10-1B"      } },
+	{ 2, 0x1007, 0x13bd, 0, 0x1339, 0, { 0 }, { "GRID M10-1B4"     } },
+	{ 2, 0x1007, 0x13bd, 0, 0x1286, 0, { 0 }, { "GRID M10-2B"      } },
+	{ 2, 0x1007, 0x13bd, 0, 0x12ee, 0, { 0 }, { "GRID M10-2B4"     } },
+	{ 2, 0x1007, 0x13bd, 0, 0x11ce, 0, { 0 }, { "GRID M10-0Q"      } },
+	{ 2, 0x1007, 0x13bd, 0, 0x11cf, 0, { 0 }, { "GRID M10-1Q"      } },
+	{ 2, 0x1007, 0x13bd, 0, 0x11d0, 0, { 0 }, { "GRID M10-2Q"      } },
+	{ 2, 0x1007, 0x13bd, 0, 0x11d1, 0, { 0 }, { "GRID M10-4Q"      } },
+	{ 2, 0x1007, 0x13bd, 0, 0x11d2, 0, { 0 }, { "GRID M10-8Q"      } },
+	{ 2, 0x1007, 0x13bd, 0, 0x11d3, 0, { 0 }, { "GRID M10-1A"      } },
+	{ 2, 0x1007, 0x13bd, 0, 0x11d4, 0, { 0 }, { "GRID M10-2A"      } },
+	{ 2, 0x1007, 0x13bd, 0, 0x11d5, 0, { 0 }, { "GRID M10-4A"      } },
+	{ 2, 0x1007, 0x13bd, 0, 0x11d6, 0, { 0 }, { "GRID M10-8A"      } },
+
 	/* Tesla M60 */
 	{ 2, 0x1007, 0x13f2, 0, 0x114c, 0, { 0 }, { "GRID M60-0Q"      } },
 	{ 2, 0x1007, 0x13f2, 0, 0x114d, 0, { 0 }, { "GRID M60-1Q"      } },
@@ -597,10 +613,10 @@ static vgpu_unlock_vgpu_t vgpu_unlock_vgpu[] =
 	{ 2, 0x1007, 0x13f2, 0, 0x117D, 0, { 0 }, { "GRID M60-2B"      } },
 	{ 2, 0x1007, 0x13f2, 0, 0x1337, 0, { 0 }, { "GRID M60-1B4"     } },
 	{ 2, 0x1007, 0x13f2, 0, 0x12ec, 0, { 0 }, { "GRID M60-2B4"     } },
-	{ 2, 0x1007, 0x13f2, 0, 0x11AE, 0, { 0 }, { "GRID M60-1A"      } },
-	{ 2, 0x1007, 0x13f2, 0, 0x11AF, 0, { 0 }, { "GRID M60-2A"      } },
-	{ 2, 0x1007, 0x13f2, 0, 0x11B0, 0, { 0 }, { "GRID M60-4A"      } },
-	{ 2, 0x1007, 0x13f2, 0, 0x11B1, 0, { 0 }, { "GRID M60-8A"      } },
+	{ 2, 0x1007, 0x13f2, 0, 0x11ae, 0, { 0 }, { "GRID M60-1A"      } },
+	{ 2, 0x1007, 0x13f2, 0, 0x11aF, 0, { 0 }, { "GRID M60-2A"      } },
+	{ 2, 0x1007, 0x13f2, 0, 0x11b0, 0, { 0 }, { "GRID M60-4A"      } },
+	{ 2, 0x1007, 0x13f2, 0, 0x11b1, 0, { 0 }, { "GRID M60-8A"      } },
 
 	/* Tesla P40 */
 	{ 2, 0x1007, 0x1b38, 0, 0x11e7, 0, { 0 }, { "GRID P40-1B"      } },
@@ -769,13 +785,22 @@ static uint16_t vgpu_unlock_pci_devid_to_vgpu_capable(uint16_t pci_devid)
 {
 	switch (pci_devid)
 	{
-	/* GK104 Uses M60 profiles */
-	case 0x1183: /* GTX 660 Ti */
 
-	/* GM107 Uses M60 profiles */
+	/* GM107 */
 	case 0x139a: /* GTX 950M */
 	case 0x13b6: /* Quadro M1200, GM107 */
 	case 0x13bc: /* Quadro K1200, GM107 */
+		return 0x13bd; /* Tesla M10 */
+
+	/* GK104 Uses M60 profiles */
+	case 0x1183: /* GTX 660 Ti */
+	case 0x1184: /* GTX 770 */
+	case 0x1185: /* GTX 660 OEM */
+	case 0x1187: /* GTX 760 */
+	case 0x1189: /* GTX 670 */
+	case 0x1180: /* GTX 680 */
+	case 0x1188: /* GTX 690 */
+	case 0x11ba: /* GTX K5000 */
 
 	/* GM204 */
 	case 0x13c3: /* GTX 960 GM204 OEM Edition */
