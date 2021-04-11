@@ -8,6 +8,10 @@ indent_style = space
 indent_size = 4
 trim_trailing_whitespace = true
 
+[*.{c,h}]
+indent_style = tab
+indent_size = 8
+
 [*.ld]
 indent_size = 2
 
