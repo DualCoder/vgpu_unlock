@@ -810,7 +810,6 @@ static uint16_t vgpu_unlock_pci_devid_to_vgpu_capable(uint16_t pci_devid)
 	case 0x13bc: /* Quadro K1200 */
 		return 0x13bd; /* Tesla M10 */
 
-
 	/* GM204 */
 	case 0x13c3: /* GTX 960 GM204 OEM Edition */
 	case 0x13d9: /* GTX 965M */
