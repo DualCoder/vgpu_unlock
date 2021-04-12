@@ -787,24 +787,36 @@ static uint16_t vgpu_unlock_pci_devid_to_vgpu_capable(uint16_t pci_devid)
 	{
 
 	/* GM107 */
+	case 0x1390: /* GTX 845M */
+	case 0x1391: /* GTX 850M */
+	case 0x1392: /* GTX 860M */
 	case 0x139a: /* GTX 950M */
-	case 0x13b6: /* Quadro M1200, GM107 */
-	case 0x13bc: /* Quadro K1200, GM107 */
+	case 0x139b: /* GTX 960M */
+	case 0x139c: /* GTX 940M */
+	case 0x139d: /* GTX 750 Ti Maxwell */
+	case 0x179c: /* GTX 940MX */
+	case 0x1380: /* GTX 750 Ti Maxwell */
+	case 0x1381: /* GTX 750 Maxwell */
+	case 0x1382: /* GTX 745 Maxwell */
+	case 0x13b0: /* Quadro M2000 Mobile */
+	case 0x13b1: /* Quadro M1000 Mobile */
+	case 0x13b2: /* Quadro M600 Mobile */
+	case 0x13b3: /* Quadro K2200 Mobile */
+	case 0x13b4: /* Quadro M620 Mobile */
+	case 0x13b6: /* Quadro M1200 Mobile*/
+	case 0x13b9: /* NVS 810 */
+	case 0x13ba: /* Quadro K2200 */
+	case 0x13bb: /* Quadro K620 */
+	case 0x13bc: /* Quadro K1200 */
 		return 0x13bd; /* Tesla M10 */
 
-	/* GK104 Uses M60 profiles */
-	case 0x1183: /* GTX 660 Ti */
-	case 0x1184: /* GTX 770 */
-	case 0x1185: /* GTX 660 OEM */
-	case 0x1187: /* GTX 760 */
-	case 0x1189: /* GTX 670 */
-	case 0x1180: /* GTX 680 */
-	case 0x1188: /* GTX 690 */
-	case 0x11ba: /* GTX K5000 */
 
 	/* GM204 */
 	case 0x13c3: /* GTX 960 GM204 OEM Edition */
+	case 0x13d9: /* GTX 965M */
+	case 0x13d8: /* GTX 970M */
 	case 0x13c2: /* GTX 970 */
+	case 0x13d7: /* GTX 980M */
 	case 0x13c1: /* GM204 Unknown */
 	case 0x13c0: /* GTX 980 */
 	case 0x13f1: /* Quadro M4000 */
@@ -818,8 +830,26 @@ static uint16_t vgpu_unlock_pci_devid_to_vgpu_capable(uint16_t pci_devid)
 	case 0x1b30: /* Quadro P6000 */
 		return 0x1b38; /* Tesla P40 */
 
+	/* GP108 Uses P4 Profiles */
+	case 0x1d01: /* GT 1030 */
+	case 0x1d10: /* MX150 Mobile */
+	case 0x1d11: /* MX230 Mobile */
+	case 0x1d12: /* MX150 Mobile */
+	case 0x1d13: /* MX250 Mobile */
+	case 0x1d16: /* MX330 Mobile */
+
 	/* GP107 Uses P4 Profiles */
-	case 0x1cb1: /* NVIDIA Quadro P1000 GP107GL */
+	case 0x1cb1: /* Quadro P1000 */
+	case 0x1c81: /* GTX 1050 2GB */
+	case 0x1c82: /* GTX 1050 Ti */
+	case 0x1c83: /* GTX 1050 3GB */
+	case 0x1c8c: /* GTX 1050 Ti Mobile */
+	case 0x1c8d: /* GTX 1050 Mobile */
+	case 0x1c8f: /* GTX 1050 Ti Max-Q */
+	case 0x1c90: /* MX150 Mobile */
+	case 0x1c92: /* GTX 1050 Mobile */
+	case 0x1c94: /* MX350 Mobile */
+	case 0x1c96: /* MX350 Mobile */
 
 	/* GP106 Uses P4 Profiles*/
 	case 0x1c09: /* P106-90 3GB  */
@@ -829,7 +859,13 @@ static uint16_t vgpu_unlock_pci_devid_to_vgpu_capable(uint16_t pci_devid)
 	case 0x1c02: /* GTX 1060 3GB */
 	case 0x1c30: /* Quadro P2000 */
 	case 0x1c31: /* Quadro P2200 */
-	case 0x1C20: /* NVIDIA GeForce GTX 1060 with Max-Q Design (6GB variant) */
+	case 0x1c20: /* GTX 1060 Mobile */
+	case 0x1c21: /* GTX 1050 Ti Mobile */
+	case 0x1c2d: /* GP106M Generic */
+	case 0x1c60: /* GTX 1060 Mobile 6GB */
+	case 0x1c61: /* GTX 1050 Ti Mobile */
+	case 0x1c62: /* GTX 1050 Mobile */
+	case 0x1c70: /* GP106GL Generic */
 	
 	/* GP104 */
 	case 0x1b80: /* GTX 1080 */
@@ -842,6 +878,7 @@ static uint16_t vgpu_unlock_pci_devid_to_vgpu_capable(uint16_t pci_devid)
 
 	/* GV100 */
 	case 0x1d81: /* Titan V 16GB */
+	case 0x1dba: /* Quadro GV100 32GB */
 		return 0x1db4; /* Tesla V100 16GB PCIE */
 
 	/* TU102 */
