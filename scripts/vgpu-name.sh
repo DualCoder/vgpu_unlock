@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# This file is part of the "vgpu_unlock" project, and is distributed under the MIT License.
+# See the LICENSE file for more details.
+
 help_function()
 {
 	echo "This script checks for the internal names of vGPU profiles."
