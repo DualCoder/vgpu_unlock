@@ -204,9 +204,12 @@ script_source = r"""
                     spoofed_devid = 0x1e30; // Quadro RTX 6000
                     spoofed_subsysid = 0x12ba;
                 }
+                
+                // TU106 (Merged with Tesla T4)
+                if(actual_devid == 0x1f08 || // RTX 2060 6GB
 
                 // TU104
-                if(actual_devid == 0x1e81 || // RTX 2080 Super
+                   actual_devid == 0x1e81 || // RTX 2080 Super
                    actual_devid == 0x1e82 || // RTX 2080
                    actual_devid == 0x1e84 || // RTX 2070 Super
                    actual_devid == 0x1e87 || // RTX 2080 Rev. A

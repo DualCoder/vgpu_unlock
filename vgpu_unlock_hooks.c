@@ -885,6 +885,9 @@ static uint16_t vgpu_unlock_pci_devid_to_vgpu_capable(uint16_t pci_devid)
 	case 0x1e04: /* RTX 2080 Ti */
 	case 0x1e07: /* RTX 2080 Ti Rev. A*/
 		return 0x1e30; /* Quadro RTX 6000 */
+	
+	/* TU106 Uses T4 Profiles */
+	case 0x1f08: /* RTX 2060 6GB */
 
 	/* TU104 */
 	case 0x1e81: /* RTX 2080 Super */
