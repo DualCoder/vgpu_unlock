@@ -249,7 +249,7 @@ def main():
         exit()
 
     device.on("child-added", on_child_added)
-    pid = device.spawn(sys.argv[2])
+    pid = device.spawn(["/bin/bash", "-c", ' '.join(sys.argv[2:])])
     instrument(pid)
 
     # Wait for everything to terminate before exiting.
