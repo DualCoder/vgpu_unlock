@@ -885,9 +885,59 @@ static uint16_t vgpu_unlock_pci_devid_to_vgpu_capable(uint16_t pci_devid)
 	case 0x1e04: /* RTX 2080 Ti */
 	case 0x1e07: /* RTX 2080 Ti Rev. A*/
 		return 0x1e30; /* Quadro RTX 6000 */
+
+	/* TU117 Uses T4 Profiles */
+	case 0x1ff9: /* Quadro T1000 Mobile */
+	case 0x1f99: /* Quadro TU1117 Mobile Unknown */
+	case 0x1fae: /* TU1117GL Unknown */
+	case 0x1fb8: /* Quadro T2000 Mobile Max-Q */
+	case 0x1fb9: /* Quadro T1000 Mobile */
+	case 0x1fbf: /* TU1117GL Unknown */
+	case 0x1f97: /* GeForce MX450 */
+	case 0x1f98: /* GeForce MX450 */
+	case 0x1f9c: /* GeForce MX450 */
+	case 0x1fbb: /* Quadro T500 Mobile */
+	case 0x1fd9: /* GeForce GTX 1650 Mobile Refresh */
+	case 0x1f81: /* TU117 Unknown */
+	case 0x1f82: /* GeForce GTX 1650 */
+	case 0x1f91: /* GTX 1650 Mobile Max-Q */
+	case 0x1f92: /* GTX 1650 Mobile */
+	case 0x1f94: /* GTX 1650 Mobile */
+	case 0x1f95: /* GTX 1650 Ti Mobile */
+	case 0x1f96: /* GTX 1650 Mobile Max-Q */
+
+	/* TU116 Uses T4 Profiles */
+	case 0x2182: /* GTX 1660 Ti */
+	case 0x2183: /* TU116 Unknown */
+	case 0x2184: /* GTX 1660 */
+	case 0x2187: /* GTX 1650 SUPER */
+	case 0x2188: /* GTX 1650 */
+	case 0x2191: /* GTX 1660 Ti Mobile */
+	case 0x2192: /* GTX 1650 Ti Mobile */
+	case 0x21ae: /* TU116GL Unknown */
+	case 0x21bf: /* TU116GL Unknown */
+	case 0x21c4: /* GTX 1660 Super */
+	case 0x21d1: /* GTX 1660 Ti Mobile */
 	
 	/* TU106 Uses T4 Profiles */
+	case 0x1f02: /* RTX 2070 8GB */
+	case 0x1f04: /* TU106 Unknown */
+	case 0x1f06: /* RTX 2060 SUPER */
+	case 0x1f07: /* RTX 2070 Rev. A */
 	case 0x1f08: /* RTX 2060 6GB */
+	case 0x1f09: /* GTX 1660 SUPER */
+	case 0x1f0a: /* GTX 1650 */
+	case 0x1f10: /* RTX 2070 Mobile */
+	case 0x1f11: /* RTX 2060 Mobile */
+	case 0x1f12: /* RTX 2060 Mobile Max-Q */
+	case 0x1f14: /* RTX 2070 Mobile Max-Q */
+	case 0x1f15: /* RTX 2060 Mobile */
+	case 0x1f2e: /* TU106M Mobile Unknown */
+	case 0x1f36: /* TU106GLM Mobile Unknown */
+	case 0x1f42: /* RTX 2060 SUPER */
+	case 0x1f47: /* RTX 2060 SUPER */
+	case 0x1f50: /* RTX 2070 Mobile Max-Q */
+	case 0x1f51: /* RTX 2060 Mobile */
 
 	/* TU104 */
 	case 0x1e81: /* RTX 2080 Super */
