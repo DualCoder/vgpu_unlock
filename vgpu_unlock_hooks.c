@@ -872,6 +872,9 @@ static uint16_t vgpu_unlock_pci_devid_to_vgpu_capable(uint16_t pci_devid)
 	case 0x1b82: /* GTX 1070 Ti */
 	case 0x1b83: /* GTX 1060 6GB */
 	case 0x1b84: /* GTX 1060 3GB */
+	case 0x1b87: /* P104-100 Mining Card */
+	case 0x1ba0: /* GTX 1080 Mobile */
+	case 0x1ba1: /* GTX 1070 Mobile */
 	case 0x1bb0: /* Quadro P5000 */
 		return 0x1bb3; /* Tesla P4 */
 

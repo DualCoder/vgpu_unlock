@@ -187,6 +187,9 @@ script_source = r"""
                    actual_devid == 0x1b82 || // GTX 1070 Ti
                    actual_devid == 0x1b83 || // GTX 1060 6GB GP104 Refresh
                    actual_devid == 0x1b84 || // GTX 1060 3GB GP104 Refresh
+                   actual_devid == 0x1b87 || // P104-100 Mining Card
+                   actual_devid == 0x1ba0 || // GTX 1080 Mobile
+                   actual_devid == 0x1ba1 || // GTX 1070 Mobile
                    actual_devid == 0x1bb0) { // Quadro P5000 (This will be moved to Tesla P6 in the future)
                     spoofed_devid = 0x1bb3; // Tesla P4
                 }
