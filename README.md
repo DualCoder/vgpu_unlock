@@ -25,7 +25,10 @@ a software limitation for those GPUs. This tool aims to remove this limitation.
 
 ### Easy patch:
 
-In the following instructions, it's assumed that you have the `vgpu_unlock` folder under `/opt/`. As in, the file `vgpu_unlock_hooks.c` should be located at `/opt/vgpu_unlock/vgpu_unlock_hooks.c`. If that's not the case, then proceed with the manual installation below.
+In the following instructions, it's assumed that you have the `vgpu_unlock`
+folder under `/opt/`. As in, the file `vgpu_unlock_hooks.c` should be located
+at `/opt/vgpu_unlock/vgpu_unlock_hooks.c`. If that's not the case, then
+proceed with the manual installation below.
 
 -   Make sure that both the NVIDIA vGPU-KVM driver installer (the `.run` file) and the `vgpu_unlock.patch` are in the same folder.
 -   Apply the patch with `sh NVIDIA-INSTALLER.run --apply-patch vgpu_unlock.patch`. This should create a new file ending with `-custom.run`.
