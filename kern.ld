@@ -90,7 +90,7 @@ SECTIONS
   {
     *(.data)
     vgpu_unlock_nv_kern_rodata_beg = .;
-    *nv-kernel.o(.rodata)
+    *nv-kernel.o(.rodata*)
     vgpu_unlock_nv_kern_rodata_end = .;
   }
   .data1        0 : { *(.data1) }
