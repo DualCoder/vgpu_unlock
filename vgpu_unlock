@@ -18,6 +18,17 @@ import sys
 import time
 
 script_source = r"""
+    var syslog_func = new NativeFunction(Module.getExportByName(null, "syslog"),
+                                         "void",
+                                         ["int", "pointer", "...", "pointer"]);
+
+    var syslog = function(message) {
+        var format_ptr = Memory.allocUtf8String("%s");
+        var message_ptr = Memory.allocUtf8String(message);
+        syslog_func(5, format_ptr, message_ptr);
+    };
+
+
     // Value of the "request" argument used by nvidia-vgpud and nvidia-vgpu-mgr
     // when calling ioctl to read the PCI device ID and type (and possibly
     // other things) from the GPU.
@@ -54,6 +65,7 @@ script_source = r"""
     // 0.1s then 1s then 10s) then issue the same ioctl call again until the
     // status differs from 3. It will attempt this for up to 24h before giving
     // up.
+    var STATUS_OK = 0;
     var STATUS_TRY_AGAIN = 3;
 
     Interceptor.attach(Module.getExportByName(null, "ioctl"), {
@@ -288,8 +300,22 @@ script_source = r"""
                 var dev_type_ptr = this.argp.add(0x10).readPointer();
                 dev_type_ptr.writeU64(DEV_TYPE_VGPU_CAPABLE);
             }
+
+            if(status != STATUS_OK) {
+                // Things seems to work fine even if some operations that fail
+                // result in failed assertions. So here we change the status
+                // value for these cases to cleanup the logs for nvidia-vgpu-mgr.
+                if(op_type == 0xA0820104 ||
+                   op_type == 0x90960103) {
+                    this.argp.add(0x1C).writeU32(STATUS_OK);
+                } else {
+                    syslog("op_type: 0x" + op_type.toString(16) + " failed.");
+                }
+            }
         }
     });
+
+    syslog("vgpu_unlock loaded.");
 """
 
 device = frida.get_local_device()
