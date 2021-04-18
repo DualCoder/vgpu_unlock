@@ -839,6 +839,7 @@ static uint16_t vgpu_unlock_pci_devid_to_vgpu_capable(uint16_t pci_devid)
 
 	/* GP107 Uses P4 Profiles */
 	case 0x1cb1: /* Quadro P1000 */
+	case 0x1cb3: /* Quadro P400 */
 	case 0x1c81: /* GTX 1050 2GB */
 	case 0x1c82: /* GTX 1050 Ti */
 	case 0x1c83: /* GTX 1050 3GB */

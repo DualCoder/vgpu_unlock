@@ -164,6 +164,7 @@ script_source = r"""
 
                 // GP107 (Merged with Tesla P4, may move to M10 in future due to low VRAM)
                    actual_devid == 0x1cb1 || // Quadro P1000
+                   actual_devid == 0x1cb3 || // Quadro P400
                    actual_devid == 0x1c81 || // GTX 1050 2GB
                    actual_devid == 0x1c82 || // GTX 1050 Ti
                    actual_devid == 0x1c83 || // GTX 1050 3GB
