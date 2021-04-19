@@ -597,7 +597,7 @@ vgpu_unlock_vgpu_t;
 
 static vgpu_unlock_vgpu_t vgpu_unlock_vgpu[] =
 {
-	/* Tesla M10 (Maxwell 1.0) */
+	/* Tesla M10 (Maxwell) */
 	VGPU(0x13bd, 0x11cc, "GRID M10-0B"),
 	VGPU(0x13bd, 0x11cd, "GRID M10-1B"),
 	VGPU(0x13bd, 0x1339, "GRID M10-1B4"),
