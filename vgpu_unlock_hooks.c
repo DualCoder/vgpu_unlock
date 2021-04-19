@@ -739,7 +739,7 @@ static vgpu_unlock_vgpu_t vgpu_unlock_vgpu[] =
 	VGPU(0x1e30, 0x1440, "GRID RTX6000-24A"),
 
 	/* RTX A6000 (Ampere) */
-	VGPU(0x2230, 0x14fa, "NVIDIA RTX A6000-1B"),
+	VGPU(0x2230, 0x14fa, "NVIDIA RTXA6000-1B"),
 	VGPU(0x2230, 0x14fb, "NVIDIA RTXA6000-2B"),
 	VGPU(0x2230, 0x14fc, "NVIDIA RTXA6000-1Q"),
 	VGPU(0x2230, 0x14fd, "NVIDIA RTXA6000-2Q"),
