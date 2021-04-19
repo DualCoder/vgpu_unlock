@@ -597,7 +597,7 @@ vgpu_unlock_vgpu_t;
 
 static vgpu_unlock_vgpu_t vgpu_unlock_vgpu[] =
 {
-	/* Tesla M10 */
+	/* Tesla M10 (Maxwell) */
 	VGPU(0x13bd, 0x11cc, "GRID M10-0B"),
 	VGPU(0x13bd, 0x11cd, "GRID M10-1B"),
 	VGPU(0x13bd, 0x1339, "GRID M10-1B4"),
@@ -613,7 +613,7 @@ static vgpu_unlock_vgpu_t vgpu_unlock_vgpu[] =
 	VGPU(0x13bd, 0x11d5, "GRID M10-4A"),
 	VGPU(0x13bd, 0x11d6, "GRID M10-8A"),
 
-	/* Tesla M60 */
+	/* Tesla M60 (Maxwell 2.0) */
 	VGPU(0x13f2, 0x114c, "GRID M60-0Q"),
 	VGPU(0x13f2, 0x114d, "GRID M60-1Q"),
 	VGPU(0x13f2, 0x114e, "GRID M60-2Q"),
@@ -629,7 +629,23 @@ static vgpu_unlock_vgpu_t vgpu_unlock_vgpu[] =
 	VGPU(0x13f2, 0x11b0, "GRID M60-4A"),
 	VGPU(0x13f2, 0x11b1, "GRID M60-8A"),
 
-	/* Tesla P40 */
+	/* Tesla P4 (Pascal) */
+	VGPU(0x1bb3, 0x1203, "GRID P4-1B"),
+	VGPU(0x1bb3, 0x1204, "GRID P4-1Q"),
+	VGPU(0x1bb3, 0x1205, "GRID P4-2Q"),
+	VGPU(0x1bb3, 0x1206, "GRID P4-4Q"),
+	VGPU(0x1bb3, 0x1207, "GRID P4-8Q"),
+	VGPU(0x1bb3, 0x1208, "GRID P4-1A"),
+	VGPU(0x1bb3, 0x1209, "GRID P4-2A"),
+	VGPU(0x1bb3, 0x120a, "GRID P4-4A"),
+	VGPU(0x1bb3, 0x120b, "GRID P4-8A"),
+	VGPU(0x1bb3, 0x1288, "GRID P4-2B"),
+	VGPU(0x1bb3, 0x12f1, "GRID P4-2B4"),
+	VGPU(0x1bb3, 0x133c, "GRID P4-1B4"),
+	VGPU(0x1bb3, 0x1380, "GRID P4-8C"),
+	VGPU(0x1bb3, 0x1385, "GRID P4-4C"),
+
+	/* Tesla P40 (Pascal) */
 	VGPU(0x1b38, 0x11e7, "GRID P40-1B"),
 	VGPU(0x1b38, 0x11e8, "GRID P40-1Q"),
 	VGPU(0x1b38, 0x11e9, "GRID P40-2Q"),
@@ -655,40 +671,49 @@ static vgpu_unlock_vgpu_t vgpu_unlock_vgpu[] =
 	VGPU(0x1b38, 0x1382, "GRID P40-6C"),
 	VGPU(0x1b38, 0x1383, "GRID P40-8C"),
 	VGPU(0x1b38, 0x1384, "GRID P40-12C"),
-
-	/* Tesla P4 */
-	VGPU(0x1bb3, 0x1203, "GRID P4-1B"),
-	VGPU(0x1bb3, 0x1204, "GRID P4-1Q"),
-	VGPU(0x1bb3, 0x1205, "GRID P4-2Q"),
-	VGPU(0x1bb3, 0x1206, "GRID P4-4Q"),
-	VGPU(0x1bb3, 0x1207, "GRID P4-8Q"),
-	VGPU(0x1bb3, 0x1208, "GRID P4-1A"),
-	VGPU(0x1bb3, 0x1209, "GRID P4-2A"),
-	VGPU(0x1bb3, 0x120a, "GRID P4-4A"),
-	VGPU(0x1bb3, 0x120b, "GRID P4-8A"),
-	VGPU(0x1bb3, 0x1288, "GRID P4-2B"),
-	VGPU(0x1bb3, 0x12f1, "GRID P4-2B4"),
-	VGPU(0x1bb3, 0x133c, "GRID P4-1B4"),
-	VGPU(0x1bb3, 0x1380, "GRID P4-8C"),
-	VGPU(0x1bb3, 0x1385, "GRID P4-4C"),
 	
-	/* Tesla V100 16GB PCIE */
-	VGPU(0x1db4, 0x1254, "GRID V100-1A"),
-	VGPU(0x1db4, 0x1255, "GRID V100-2A"),
-	VGPU(0x1db4, 0x1256, "GRID V100-4A"),
-	VGPU(0x1db4, 0x1257, "GRID V100-8A"),
-	VGPU(0x1db4, 0x1258, "GRID V100-16A"),
-	VGPU(0x1db4, 0x124e, "GRID V100-1B"),
-	VGPU(0x1db4, 0x128f, "GRID V100-2B"),
-	VGPU(0x1db4, 0x1340, "GRID V100-1B4"),
-	VGPU(0x1db4, 0x12f5, "GRID V100-2B4"),
-	VGPU(0x1db4, 0x124f, "GRID V100-1Q"),
-	VGPU(0x1db4, 0x1250, "GRID V100-2Q"),
-	VGPU(0x1db4, 0x1251, "GRID V100-4Q"),
-	VGPU(0x1db4, 0x1252, "GRID V100-8Q"),
-	VGPU(0x1db4, 0x1253, "GRID V100-16Q"),
+	/* Tesla V100 32GB PCIE (Volta) */
+	VGPU(0x1db6, 0x12bd, "GRID V100D-1B"),
+	VGPU(0x1db6, 0x12be, "GRID V100D-2B"),
+	VGPU(0x1db6, 0x12f7, "GRID V100D-2B4"),
+	VGPU(0x1db6, 0x1342, "GRID V100D-1B4"),
+	VGPU(0x1db6, 0x12bf, "GRID V100D-1Q"),
+	VGPU(0x1db6, 0x12c0, "GRID V100D-2Q"),
+	VGPU(0x1db6, 0x12c1, "GRID V100D-4Q"),
+	VGPU(0x1db6, 0x12c2, "GRID V100D-8Q"),
+	VGPU(0x1db6, 0x12c3, "GRID V100D-16Q"),
+	VGPU(0x1db6, 0x12c4, "GRID V100D-32Q"),
+	VGPU(0x1db6, 0x12c5, "GRID V100D-1A"),
+	VGPU(0x1db6, 0x12c6, "GRID V100D-2A"),
+	VGPU(0x1db6, 0x12c7, "GRID V100D-4A"),
+	VGPU(0x1db6, 0x12c8, "GRID V100D-8A"),
+	VGPU(0x1db6, 0x12c9, "GRID V100D-16A"),
+	VGPU(0x1db6, 0x12ca, "GRID V100D-32A"),
+	VGPU(0x1db6, 0x1395, "GRID V100D-4C"),
+	VGPU(0x1db6, 0x1396, "GRID V100D-8C"),
+	VGPU(0x1db6, 0x1397, "GRID V100D-16C"),	
+	VGPU(0x1db6, 0x1377, "GRID V100D-32C"),	
 
-	/* Quadro RTX 6000 */
+	/* Tesla T4 (Turing) */
+	VGPU(0x1eb8, 0x1309, "GRID T4-1B"),
+	VGPU(0x1eb8, 0x130a, "GRID T4-2B"),
+	VGPU(0x1eb8, 0x130b, "GRID T4-2B4"),
+	VGPU(0x1eb8, 0x130c, "GRID T4-1Q"),
+	VGPU(0x1eb8, 0x130d, "GRID T4-2Q"),
+	VGPU(0x1eb8, 0x130e, "GRID T4-4Q"),
+	VGPU(0x1eb8, 0x130f, "GRID T4-8Q"),
+	VGPU(0x1eb8, 0x1310, "GRID T4-16Q"),
+	VGPU(0x1eb8, 0x1311, "GRID T4-1A"),
+	VGPU(0x1eb8, 0x1312, "GRID T4-2A"),
+	VGPU(0x1eb8, 0x1313, "GRID T4-4A"),
+	VGPU(0x1eb8, 0x1314, "GRID T4-8A"),
+	VGPU(0x1eb8, 0x1315, "GRID T4-16A"),
+	VGPU(0x1eb8, 0x1345, "GRID T4-1B4"),
+	VGPU(0x1eb8, 0x1375, "GRID T4-16C"),
+	VGPU(0x1eb8, 0x139a, "GRID T4-4C"),
+	VGPU(0x1eb8, 0x139b, "GRID T4-8C"),
+
+	/* Quadro RTX 6000 (Turing) */
 	VGPU(0x1e30, 0x1325, "GRID RTX6000-1Q"),
 	VGPU(0x1e30, 0x1326, "GRID RTX6000-2Q"),
 	VGPU(0x1e30, 0x1327, "GRID RTX6000-3Q"),
@@ -713,55 +738,36 @@ static vgpu_unlock_vgpu_t vgpu_unlock_vgpu[] =
 	VGPU(0x1e30, 0x143f, "GRID RTX6000-12A"),
 	VGPU(0x1e30, 0x1440, "GRID RTX6000-24A"),
 
-	/* Tesla T4 */
-	VGPU(0x1eb8, 0x1309, "GRID T4-1B"),
-	VGPU(0x1eb8, 0x130a, "GRID T4-2B"),
-	VGPU(0x1eb8, 0x130b, "GRID T4-2B4"),
-	VGPU(0x1eb8, 0x130c, "GRID T4-1Q"),
-	VGPU(0x1eb8, 0x130d, "GRID T4-2Q"),
-	VGPU(0x1eb8, 0x130e, "GRID T4-4Q"),
-	VGPU(0x1eb8, 0x130f, "GRID T4-8Q"),
-	VGPU(0x1eb8, 0x1310, "GRID T4-16Q"),
-	VGPU(0x1eb8, 0x1311, "GRID T4-1A"),
-	VGPU(0x1eb8, 0x1312, "GRID T4-2A"),
-	VGPU(0x1eb8, 0x1313, "GRID T4-4A"),
-	VGPU(0x1eb8, 0x1314, "GRID T4-8A"),
-	VGPU(0x1eb8, 0x1315, "GRID T4-16A"),
-	VGPU(0x1eb8, 0x1345, "GRID T4-1B4"),
-	VGPU(0x1eb8, 0x1375, "GRID T4-16C"),
-	VGPU(0x1eb8, 0x139a, "GRID T4-4C"),
-	VGPU(0x1eb8, 0x139b, "GRID T4-8C"),
-
-	/* RTX A40 */
-	VGPU(0x2235, 0x14d5, "NVIDIA A40-1B"),
-	VGPU(0x2235, 0x14d6, "NVIDIA A40-2B"),
-	VGPU(0x2235, 0x14d7, "NVIDIA A40-1Q"),
-	VGPU(0x2235, 0x14d8, "NVIDIA A40-2Q"),
-	VGPU(0x2235, 0x14d9, "NVIDIA A40-3Q"),
-	VGPU(0x2235, 0x14da, "NVIDIA A40-4Q"),
-	VGPU(0x2235, 0x14db, "NVIDIA A40-6Q"),
-	VGPU(0x2235, 0x14dc, "NVIDIA A40-8Q"),
-	VGPU(0x2235, 0x14dd, "NVIDIA A40-12Q"),
-	VGPU(0x2235, 0x14de, "NVIDIA A40-16Q"),
-	VGPU(0x2235, 0x14df, "NVIDIA A40-24Q"),
-	VGPU(0x2235, 0x14e0, "NVIDIA A40-48Q"),
-	VGPU(0x2235, 0x14e1, "NVIDIA A40-1A"),
-	VGPU(0x2235, 0x14e2, "NVIDIA A40-2A"),
-	VGPU(0x2235, 0x14e3, "NVIDIA A40-3A"),
-	VGPU(0x2235, 0x14e4, "NVIDIA A40-4A"),
-	VGPU(0x2235, 0x14e5, "NVIDIA A40-6A"),
-	VGPU(0x2235, 0x14e6, "NVIDIA A40-8A"),
-	VGPU(0x2235, 0x14e7, "NVIDIA A40-12A"),
-	VGPU(0x2235, 0x14e8, "NVIDIA A40-16A"),
-	VGPU(0x2235, 0x14e9, "NVIDIA A40-24A"),
-	VGPU(0x2235, 0x14ea, "NVIDIA A40-48A"),
-	VGPU(0x2235, 0x14f3, "NVIDIA A40-4C"),
-	VGPU(0x2235, 0x14f4, "NVIDIA A40-6C"),
-	VGPU(0x2235, 0x14f5, "NVIDIA A40-8C"),
-	VGPU(0x2235, 0x14f6, "NVIDIA A40-12C"),
-	VGPU(0x2235, 0x14f7, "NVIDIA A40-16C"),
-	VGPU(0x2235, 0x14f8, "NVIDIA A40-24C"),
-	VGPU(0x2235, 0x14f9, "NVIDIA A40-48C"),
+	/* RTX A6000 (Ampere) */
+	VGPU(0x2230, 0x14fa, "NVIDIA RTXA6000-1B"),
+	VGPU(0x2230, 0x14fb, "NVIDIA RTXA6000-2B"),
+	VGPU(0x2230, 0x14fc, "NVIDIA RTXA6000-1Q"),
+	VGPU(0x2230, 0x14fd, "NVIDIA RTXA6000-2Q"),
+	VGPU(0x2230, 0x14fe, "NVIDIA RTXA6000-3Q"),
+	VGPU(0x2230, 0x14ff, "NVIDIA RTXA6000-4Q"),
+	VGPU(0x2230, 0x1500, "NVIDIA RTXA6000-6Q"),
+	VGPU(0x2230, 0x1501, "NVIDIA RTXA6000-8Q"),
+	VGPU(0x2230, 0x1502, "NVIDIA RTXA6000-12Q"),
+	VGPU(0x2230, 0x1503, "NVIDIA RTXA6000-16Q"),
+	VGPU(0x2230, 0x1504, "NVIDIA RTXA6000-24Q"),
+	VGPU(0x2230, 0x1505, "NVIDIA RTXA6000-48Q"),
+	VGPU(0x2230, 0x1506, "NVIDIA RTXA6000-1A"),
+	VGPU(0x2230, 0x1507, "NVIDIA RTXA6000-2A"),
+	VGPU(0x2230, 0x1508, "NVIDIA RTXA6000-3A"),
+	VGPU(0x2230, 0x1509, "NVIDIA RTXA6000-4A"),
+	VGPU(0x2230, 0x150a, "NVIDIA RTXA6000-6A"),
+	VGPU(0x2230, 0x150b, "NVIDIA RTXA6000-8A"),
+	VGPU(0x2230, 0x150c, "NVIDIA RTXA6000-12A"),
+	VGPU(0x2230, 0x150d, "NVIDIA RTXA6000-16A"),
+	VGPU(0x2230, 0x150e, "NVIDIA RTXA6000-24A"),
+	VGPU(0x2230, 0x150f, "NVIDIA RTXA6000-48A"),
+	VGPU(0x2230, 0x1514, "NVIDIA RTXA6000-4C"),
+	VGPU(0x2230, 0x1515, "NVIDIA RTXA6000-6C"),
+	VGPU(0x2230, 0x1516, "NVIDIA RTXA6000-8C"),
+	VGPU(0x2230, 0x1517, "NVIDIA RTXA6000-12C"),
+	VGPU(0x2230, 0x1518, "NVIDIA RTXA6000-16C"),
+	VGPU(0x2230, 0x1519, "NVIDIA RTXA6000-24C"),
+	VGPU(0x2230, 0x151a, "NVIDIA RTXA6000-48C"),
 
 	{ 0 } /* Sentinel */
 };
@@ -798,179 +804,36 @@ static uint16_t vgpu_unlock_pci_devid_to_vgpu_capable(uint16_t pci_devid)
 {
 	switch (pci_devid)
 	{
-
-	/* GM107 */
-	case 0x1390: /* GTX 845M */
-	case 0x1391: /* GTX 850M */
-	case 0x1392: /* GTX 860M */
-	case 0x139a: /* GTX 950M */
-	case 0x139b: /* GTX 960M */
-	case 0x139c: /* GTX 940M */
-	case 0x139d: /* GTX 750 Ti Maxwell */
-	case 0x179c: /* GTX 940MX */
-	case 0x1380: /* GTX 750 Ti Maxwell */
-	case 0x1381: /* GTX 750 Maxwell */
-	case 0x1382: /* GTX 745 Maxwell */
-	case 0x13b0: /* Quadro M2000 Mobile */
-	case 0x13b1: /* Quadro M1000 Mobile */
-	case 0x13b2: /* Quadro M600 Mobile */
-	case 0x13b3: /* Quadro K2200 Mobile */
-	case 0x13b4: /* Quadro M620 Mobile */
-	case 0x13b6: /* Quadro M1200 Mobile*/
-	case 0x13b9: /* NVS 810 */
-	case 0x13ba: /* Quadro K2200 */
-	case 0x13bb: /* Quadro K620 */
-	case 0x13bc: /* Quadro K1200 */
+	/* Maxwell */
+	case 0x1340 ... 0x13bd:
+	case 0x174d ... 0x179c:
 		return 0x13bd; /* Tesla M10 */
 
-	/* GM204 */
-	case 0x13c3: /* GTX 960 GM204 OEM Edition */
-	case 0x13d9: /* GTX 965M */
-	case 0x13d8: /* GTX 970M */
-	case 0x13c2: /* GTX 970 */
-	case 0x13d7: /* GTX 980M */
-	case 0x13c1: /* GM204 Unknown */
-	case 0x13c0: /* GTX 980 */
-	case 0x13f1: /* Quadro M4000 */
-	case 0x13f0: /* Quadro M5000 */
+	/* Maxwell 2.0 */
+	case 0x13c0 ... 0x1436:
+	case 0x1617 ... 0x1667: /* GM204 */
+	case 0x17c2 ... 0x17fd: /* GM200 */
 		return 0x13f2; /* Tesla M60 */
-
-	/* GP102 */
-	case 0x1b00: /* TITAN X (Pascal) */
-	case 0x1b02: /* TITAN Xp */
-	case 0x1b06: /* GTX 1080 Ti */
-	case 0x1b30: /* Quadro P6000 */
+		
+	/* Pascal */
+	case 0x15f0 ... 0x15f1: /* GP100GL */
+	case 0x1b00 ... 0x1d56:
+	case 0x1725 ... 0x172f: /* GP100 */
 		return 0x1b38; /* Tesla P40 */
 
-	/* GP108 Uses P4 Profiles */
-	case 0x1d01: /* GT 1030 */
-	case 0x1d10: /* MX150 Mobile */
-	case 0x1d11: /* MX230 Mobile */
-	case 0x1d12: /* MX150 Mobile */
-	case 0x1d13: /* MX250 Mobile */
-	case 0x1d16: /* MX330 Mobile */
-
-	/* GP107 Uses P4 Profiles */
-	case 0x1cb1: /* Quadro P1000 */
-	case 0x1cb3: /* Quadro P400 */
-	case 0x1c81: /* GTX 1050 2GB */
-	case 0x1c82: /* GTX 1050 Ti */
-	case 0x1c83: /* GTX 1050 3GB */
-	case 0x1c8c: /* GTX 1050 Ti Mobile */
-	case 0x1c8d: /* GTX 1050 Mobile */
-	case 0x1c8f: /* GTX 1050 Ti Max-Q */
-	case 0x1c90: /* MX150 Mobile */
-	case 0x1c92: /* GTX 1050 Mobile */
-	case 0x1c94: /* MX350 Mobile */
-	case 0x1c96: /* MX350 Mobile */
-
-	/* GP106 Uses P4 Profiles*/
-	case 0x1c09: /* P106-90 3GB  */
-	case 0x1c07: /* P106-100 6GB */
-	case 0x1c04: /* GTX 1060 5GB */
-	case 0x1c03: /* GTX 1060 6GB */
-	case 0x1c02: /* GTX 1060 3GB */
-	case 0x1c30: /* Quadro P2000 */
-	case 0x1c31: /* Quadro P2200 */
-	case 0x1c20: /* GTX 1060 Mobile */
-	case 0x1c21: /* GTX 1050 Ti Mobile */
-	case 0x1c2d: /* GP106M Generic */
-	case 0x1c60: /* GTX 1060 Mobile 6GB */
-	case 0x1c61: /* GTX 1050 Ti Mobile */
-	case 0x1c62: /* GTX 1050 Mobile */
-	case 0x1c70: /* GP106GL Generic */
-	
-	/* GP104 */
-	case 0x1b80: /* GTX 1080 */
-	case 0x1b81: /* GTX 1070 */
-	case 0x1b82: /* GTX 1070 Ti */
-	case 0x1b83: /* GTX 1060 6GB */
-	case 0x1b84: /* GTX 1060 3GB */
-	case 0x1b87: /* P104-100 Mining Card */
-	case 0x1ba0: /* GTX 1080 Mobile */
-	case 0x1ba1: /* GTX 1070 Mobile */
-	case 0x1bb0: /* Quadro P5000 */
-		return 0x1bb3; /* Tesla P4 */
-
-	/* GV100 */
+	/* Volta GV100 */
 	case 0x1d81: /* Titan V 16GB */
 	case 0x1dba: /* Quadro GV100 32GB */
-		return 0x1db4; /* Tesla V100 16GB PCIE */
+		return 0x1db6; /* Tesla V100 32GB PCIE */
 
-	/* TU102 */
-	case 0x1e02: /* TITAN RTX */
-	case 0x1e04: /* RTX 2080 Ti */
-	case 0x1e07: /* RTX 2080 Ti Rev. A*/
+	/* Turing */
+	case 0x1e02 ... 0x1ff9:
+	case 0x2182 ... 0x21d1: /* TU116 */
 		return 0x1e30; /* Quadro RTX 6000 */
-
-	/* TU117 Uses T4 Profiles */
-	case 0x1ff9: /* Quadro T1000 Mobile */
-	case 0x1f99: /* Quadro TU1117 Mobile Unknown */
-	case 0x1fae: /* TU1117GL Unknown */
-	case 0x1fb8: /* Quadro T2000 Mobile Max-Q */
-	case 0x1fb9: /* Quadro T1000 Mobile */
-	case 0x1fbf: /* TU1117GL Unknown */
-	case 0x1f97: /* GeForce MX450 */
-	case 0x1f98: /* GeForce MX450 */
-	case 0x1f9c: /* GeForce MX450 */
-	case 0x1fbb: /* Quadro T500 Mobile */
-	case 0x1fd9: /* GeForce GTX 1650 Mobile Refresh */
-	case 0x1f81: /* TU117 Unknown */
-	case 0x1f82: /* GeForce GTX 1650 */
-	case 0x1f91: /* GTX 1650 Mobile Max-Q */
-	case 0x1f92: /* GTX 1650 Mobile */
-	case 0x1f94: /* GTX 1650 Mobile */
-	case 0x1f95: /* GTX 1650 Ti Mobile */
-	case 0x1f96: /* GTX 1650 Mobile Max-Q */
-
-	/* TU116 Uses T4 Profiles */
-	case 0x2182: /* GTX 1660 Ti */
-	case 0x2183: /* TU116 Unknown */
-	case 0x2184: /* GTX 1660 */
-	case 0x2187: /* GTX 1650 SUPER */
-	case 0x2188: /* GTX 1650 */
-	case 0x2191: /* GTX 1660 Ti Mobile */
-	case 0x2192: /* GTX 1650 Ti Mobile */
-	case 0x21ae: /* TU116GL Unknown */
-	case 0x21bf: /* TU116GL Unknown */
-	case 0x21c4: /* GTX 1660 Super */
-	case 0x21d1: /* GTX 1660 Ti Mobile */
 	
-	/* TU106 Uses T4 Profiles */
-	case 0x1f02: /* RTX 2070 8GB */
-	case 0x1f04: /* TU106 Unknown */
-	case 0x1f06: /* RTX 2060 SUPER */
-	case 0x1f07: /* RTX 2070 Rev. A */
-	case 0x1f08: /* RTX 2060 6GB */
-	case 0x1f09: /* GTX 1660 SUPER */
-	case 0x1f0a: /* GTX 1650 */
-	case 0x1f10: /* RTX 2070 Mobile */
-	case 0x1f11: /* RTX 2060 Mobile */
-	case 0x1f12: /* RTX 2060 Mobile Max-Q */
-	case 0x1f14: /* RTX 2070 Mobile Max-Q */
-	case 0x1f15: /* RTX 2060 Mobile */
-	case 0x1f2e: /* TU106M Mobile Unknown */
-	case 0x1f36: /* TU106GLM Mobile Unknown */
-	case 0x1f42: /* RTX 2060 SUPER */
-	case 0x1f47: /* RTX 2060 SUPER */
-	case 0x1f50: /* RTX 2070 Mobile Max-Q */
-	case 0x1f51: /* RTX 2060 Mobile */
-
-	/* TU104 */
-	case 0x1e81: /* RTX 2080 Super */
-	case 0x1e82: /* RTX 2080 */
-	case 0x1e84: /* RTX 2070 Super */
-	case 0x1e87: /* RTX 2080 Rev. A */
-	case 0x1e89: /* RTX 2060 */
-	case 0x1eb0: /* Quadro RTX 5000 */
-	case 0x1eb1: /* Quadro RTX 4000 */
-		return 0x1eb8; /* Tesla T4 */
-
-	/* GA102 */
-	case 0x2204: /* RTX 3090 */
-	case 0x2205: /* RTX 3080 Ti */
-	case 0x2206: /* RTX 3080 */
-		return 0x2235; /* RTX A40 */
+	/* Ampere */
+	case 0x2200 ... 0x2600: 
+		return 0x2230; /* RTX A6000 */
 	}
 
 	return pci_devid;
