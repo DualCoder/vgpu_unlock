@@ -131,6 +131,7 @@ script_source = r"""
                    actual_devid == 0x13bb || // Quadro K620
                    actual_devid == 0x13bc) { // Quadro K1200               
                     spoofed_devid = 0x13bd; // Tesla M10
+                    spoofed_subsysid = 0x1160;
                 }
 
                 // GM204
