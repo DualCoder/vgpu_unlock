@@ -314,6 +314,11 @@ script_source = r"""
                     syslog("op_type: 0x" + op_type.toString(16) + " failed.");
                 }
             }
+
+            // Workaround for some Maxwell cards not supporting reading inforom.
+            if(op_type == 0x2080014b && status == 0x56) {
+                this.argp.add(0x1C).writeU32(0x57);
+            }
         }
     });
 
