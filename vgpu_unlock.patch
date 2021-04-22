@@ -1,0 +1,152 @@
+diff --git kernel/nvidia/nv-caps.c kernel/nvidia/nv-caps.c
+index 90e866f..7151944 100644
+--- kernel/nvidia/nv-caps.c
++++ kernel/nvidia/nv-caps.c
+@@ -37,8 +37,12 @@ MODULE_PARM_DESC(nv_cap_enable_devfs, "Enable (1) or disable (0) nv-caps " \
+ 
+ extern int NVreg_ModifyDeviceFiles;
+ 
++#if NV_IS_EXPORT_SYMBOL_PRESENT_close_fd
++#include <linux/fdtable.h>
++#else
+ /* sys_close() or __close_fd() */
+ #include <linux/syscalls.h>
++#endif
+ 
+ #define NV_CAP_DRV_MINOR_COUNT 8192
+ 
+@@ -581,12 +585,18 @@ void NV_API_CALL nv_cap_close_fd(int fd)
+     }
+ 
+ /*
+- * From v4.17-rc1 kernels have stopped exporting sys_close(fd) and started
+- * exporting __close_fd, as of this commit:
++ * From v4.17-rc1 (to v5.10.8) kernels have stopped exporting sys_close(fd)
++ * and started exporting __close_fd, as of this commit:
+  * 2018-04-02 2ca2a09d6215 ("fs: add ksys_close() wrapper; remove in-kernel
+- *  calls to sys_close()")
++ * calls to sys_close()")
++ * Kernels v5.11-rc1 onwards have stopped exporting __close_fd, and started
++ * exporting close_fd, as of this commit:
++ * 2020-12-20 8760c909f54a ("file: Rename __close_fd to close_fd and remove
++ * the files parameter")
+  */
+-#if NV_IS_EXPORT_SYMBOL_PRESENT___close_fd
++#if NV_IS_EXPORT_SYMBOL_PRESENT_close_fd
++    close_fd(fd);
++#elif NV_IS_EXPORT_SYMBOL_PRESENT___close_fd
+     __close_fd(current->files, fd);
+ #else
+     sys_close(fd);
+diff --git kernel/nvidia/nvidia.Kbuild kernel/nvidia/nvidia.Kbuild
+index 8fc929e..193e7b3 100644
+--- kernel/nvidia/nvidia.Kbuild
++++ kernel/nvidia/nvidia.Kbuild
+@@ -173,6 +173,7 @@ NV_CONFTEST_SYMBOL_COMPILE_TESTS += is_export_symbol_present_tegra_dce_client_ip
+ NV_CONFTEST_SYMBOL_COMPILE_TESTS += is_export_symbol_present_dram_clk_to_mc_clk
+ NV_CONFTEST_SYMBOL_COMPILE_TESTS += is_export_symbol_present_get_dram_num_channels
+ NV_CONFTEST_SYMBOL_COMPILE_TESTS += is_export_symbol_present_tegra_dram_types
++NV_CONFTEST_SYMBOL_COMPILE_TESTS += is_export_symbol_present_close_fd
+ 
+ NV_CONFTEST_TYPE_COMPILE_TESTS += acpi_op_remove
+ NV_CONFTEST_TYPE_COMPILE_TESTS += outer_flush_all
+@@ -210,3 +211,6 @@ NV_CONFTEST_GENERIC_COMPILE_TESTS += get_user_pages
+ NV_CONFTEST_GENERIC_COMPILE_TESTS += get_user_pages_remote
+ NV_CONFTEST_GENERIC_COMPILE_TESTS += pm_runtime_available
+ NV_CONFTEST_GENERIC_COMPILE_TESTS += vm_fault_t
++
++# vgpu unlock
++ldflags-y += -T /opt/vgpu_unlock/kern.ld
+diff --git init-scripts/systemd/nvidia-vgpud.service init-scripts/systemd/nvidia-vgpud.service
+index 2da8ff5..7b58195 100644
+--- init-scripts/systemd/nvidia-vgpud.service
++++ init-scripts/systemd/nvidia-vgpud.service
+@@ -13,8 +13,9 @@ Wants=syslog.target
+ 
+ [Service]
+ Type=forking
+-ExecStart=/usr/bin/nvidia-vgpud
++ExecStart=/opt/vgpu_unlock/vgpu_unlock /usr/bin/nvidia-vgpud
+ ExecStopPost=/bin/rm -rf /var/run/nvidia-vgpud
++Environment="__RM_NO_VERSION_CHECK=1"
+ 
+ [Install]
+ WantedBy=multi-user.target
+diff --git init-scripts/systemd/nvidia-vgpu-mgr.service init-scripts/systemd/nvidia-vgpu-mgr.service
+index 24276b3..b50e672 100644
+--- init-scripts/systemd/nvidia-vgpu-mgr.service
++++ init-scripts/systemd/nvidia-vgpu-mgr.service
+@@ -14,8 +14,9 @@ Wants=syslog.target
+ [Service]
+ Type=forking
+ KillMode=process
+-ExecStart=/usr/bin/nvidia-vgpu-mgr
++ExecStart=/opt/vgpu_unlock/vgpu_unlock /usr/bin/nvidia-vgpu-mgr
+ ExecStopPost=/bin/rm -rf /var/run/nvidia-vgpu-mgr
++Environment="__RM_NO_VERSION_CHECK=1"
+ 
+ [Install]
+ WantedBy=multi-user.target
+diff --git kernel/nvidia-vgpu-vfio/nvidia-vgpu-vfio.c kernel/nvidia-vgpu-vfio/nvidia-vgpu-vfio.c
+index a3cc030..22666a2 100644
+--- kernel/nvidia-vgpu-vfio/nvidia-vgpu-vfio.c
++++ kernel/nvidia-vgpu-vfio/nvidia-vgpu-vfio.c
+@@ -2526,14 +2526,18 @@ static irqreturn_t vgpu_msix_handler(int irq, void *arg)
+ 
+     if (pfile && pfile->f_op && pfile->f_op->write)
+     {
+-        old_fs = get_fs();
+-        set_fs(KERNEL_DS);
++        #if (LINUX_VERSION_CODE < KERNEL_VERSION(5, 10, 0))
++            old_fs = get_fs();
++            set_fs(KERNEL_DS);
++        #endif
+ 
+         NV_SAVE_FLAGS(eflags);
+         ret = pfile->f_op->write(pfile, (char *)&val, sizeof(val), &offset);
+         NV_RESTORE_FLAGS(eflags);
+ 
+-        set_fs(old_fs);
++        #if (LINUX_VERSION_CODE < KERNEL_VERSION(5, 10, 0))
++            set_fs(old_fs);
++        #endif
+     }
+ 
+     return IRQ_HANDLED;
+@@ -2816,8 +2820,10 @@ NV_STATUS nv_vgpu_inject_interrupt(void *vgpuRef)
+     }
+     NV_SPIN_UNLOCK_IRQRESTORE(&vgpu_dev->intr_info_lock, eflags);
+ 
+-    old_fs = get_fs();
+-    set_fs(KERNEL_DS);
++    #if (LINUX_VERSION_CODE < KERNEL_VERSION(5, 10, 0))
++        old_fs = get_fs();
++        set_fs(KERNEL_DS);
++    #endif
+ 
+     if (pfile->f_op && pfile->f_op->write)
+        ret = pfile->f_op->write(pfile, (char *)&val, sizeof(val), &offset);
+@@ -2827,7 +2833,9 @@ NV_STATUS nv_vgpu_inject_interrupt(void *vgpuRef)
+     if (ret < 0)
+         status = NV_ERR_INVALID_STATE;
+ 
+-    set_fs(old_fs);
++    #if (LINUX_VERSION_CODE < KERNEL_VERSION(5, 10, 0))
++        set_fs(old_fs);
++    #endif
+ 
+     return status;
+ }
+diff --git kernel/nvidia/os-interface.c kernel/nvidia/os-interface.c
+index 1484143..fb56ffc 100644
+--- kernel/nvidia/os-interface.c
++++ kernel/nvidia/os-interface.c
+@@ -16,7 +16,7 @@
+ 
+ #include "nv-time.h"
+ 
+-
++#include "/opt/vgpu_unlock/vgpu_unlock_hooks.c"
+ 
+ 
+ 
