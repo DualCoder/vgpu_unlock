@@ -592,7 +592,7 @@ vgpu_unlock_vgpu_t;
 	  (dev_id),                          /* dev_id */         \
 	  0,                                 /* vend_id */        \
 	  (subsys_id),                       /* subsys_id */      \
-	  0x10de,                            /* subsys_vend_id */ \
+	  0,                                 /* subsys_vend_id */ \
 	  { name name } }                    /* name1_2 */
 
 static vgpu_unlock_vgpu_t vgpu_unlock_vgpu[] =
