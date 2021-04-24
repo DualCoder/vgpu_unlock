@@ -1,24 +1,31 @@
 # vgpu\_unlock
 
-Unlock vGPU functionality for consumer grade GPUs.
+Unlock vGPU functionality for consumer-grade Nvidia GPUs.
 
 
 ## Important!
 
-This tool is very untested, use at your own risk.
+This tool is not guarenteed to work out of the box in some cases, 
+so use it at your own risk.
 
 
 ## Description
 
 This tool enables the use of Geforce and Quadro GPUs with the NVIDIA vGPU
-software. NVIDIA vGPU normally only supports a few Tesla GPUs but since some
-Geforce and Quadro GPUs share the same physical chip as the Tesla this is only
-a software limitation for those GPUs. This tool aims to remove this limitation.
+graphics virtualization technology. NVIDIA vGPU normally only supports a 
+few datacenter Teslas and professional Quadro GPUs by design, but not 
+consumer graphics cards through a software limitation. This vgpu_unlock tool 
+aims to remove this limitation on Linux based systems, thus enabling 
+most Maxwell, Pascal, Volta (untested), and Turing based GPUs to 
+use the vGPU technology. Ampere support is currently a work in progress.  
+  
+A community maintained Wiki written by Krutav Shah with a lot more information 
+is [available here.](https://docs.google.com/document/d/1pzrWJ9h-zANCtyqRgS7Vzla0Y8Ea2-5z2HEi4X75d2Q/edit?usp=sharing)
 
 
 ## Dependencies:
 
-* This tool requires Python3, the latest version is recommended.
+* This tool requires Python3 and Python3-pip; the latest version is recommended.
 * The python package "frida" is required. `pip3 install frida`.
 * The tool requires the NVIDIA GRID vGPU driver.
 * "dkms" is required as it simplifies the process of rebuilding the
@@ -38,7 +45,7 @@ Install the NVIDIA GRID vGPU driver, make sure to install it as a dkms module.
 
 Modify the line begining with `ExecStart=` in `/lib/systemd/system/nvidia-vgpud.service`
 and `/lib/systemd/system/nvidia-vgpu-mgr.service` to use `vgpu_unlock` as
-executable and pass the original executable as the first argument. Ex:
+the executable and pass the original executable as the first argument. Example:
 ```
 ExecStart=<path_to_vgpu_unlock>/vgpu_unlock /usr/bin/nvidia-vgpud
 ```
@@ -49,7 +56,7 @@ systemctl daemon-reload
 ```
 
 Modify the file `/usr/src/nvidia-<version>/nvidia/os-interface.c` and add the
-following line after the lines begining with `#include` at the start of the
+following line after the lines begining with `#include` at the beginning of the
 file.
 ```
 #include "<path_to_vgpu_unlock>/vgpu_unlock_hooks.c"
@@ -76,9 +83,14 @@ Reboot.
 ---
 **NOTE**
 
-This script will only work if there exists a vGPU compatible Tesla GPU that
-uses the same physical chip as the actual GPU being used.
-
+This script only works with graphics cards in the same generation as their 
+professional Tesla counterparts. As a result, only Maxwell and newer 
+generation Nvidia GPUs are supported. It is not designed to be used with
+low end graphics card models, so not all cards are guarenteed to work 
+smoothly with vGPU. For the best experience, it is recommended to use 
+graphics cards with the same chip model as the Tesla cards. 
+The same applies to the operating system as well, as certain bleeding-edge 
+Linux distributions may not work well with vGPU software.
 
 ---
 
