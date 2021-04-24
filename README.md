@@ -15,9 +15,9 @@ This tool enables the use of Geforce and Quadro GPUs with the NVIDIA vGPU
 graphics virtualization technology. NVIDIA vGPU normally only supports a 
 few datacenter Teslas and professional Quadro GPUs by design, but not 
 consumer graphics cards through a software limitation. This vgpu_unlock tool 
-aims to remove this limitation, thus enabling most Maxwell, Pascal, 
-Volta (untested), and Turing based GPUs to use the vGPU technology. 
-Ampere support is currently a work in progress.  
+aims to remove this limitation on Linux based systems, thus enabling 
+most Maxwell, Pascal, Volta (untested), and Turing based GPUs to 
+use the vGPU technology. Ampere support is currently a work in progress.  
   
 A community maintained Wiki written by Krutav Shah with a lot more information 
 is [available here.](https://docs.google.com/document/d/1pzrWJ9h-zANCtyqRgS7Vzla0Y8Ea2-5z2HEi4X75d2Q/edit?usp=sharing)
