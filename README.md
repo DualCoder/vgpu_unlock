@@ -12,11 +12,12 @@ so use it at your own risk.
 ## Description
 
 This tool enables the use of Geforce and Quadro GPUs with the NVIDIA vGPU
-software. NVIDIA vGPU normally only supports a few datacenter Tesla and
-professional Quadro GPUs by design, but not consumer graphics cards through a
-software limitation. This vgpu_unlock tool aims to remove this limitation, thus
-enabling most Maxwell, Pascal, Volta (untested), and Turing based GPUs to use
-the vGPU technology. Ampere support is currently a work in progress.  
+graphics virtualization technology. NVIDIA vGPU normally only supports a 
+few datacenter Teslas and professional Quadro GPUs by design, but not 
+consumer graphics cards through a software limitation. This vgpu_unlock tool 
+aims to remove this limitation, thus enabling most Maxwell, Pascal, 
+Volta (untested), and Turing based GPUs to use the vGPU technology. 
+Ampere support is currently a work in progress.  
   
 A community maintained Wiki written by Krutav Shah with a lot more information 
 is [available here.](https://docs.google.com/document/d/1pzrWJ9h-zANCtyqRgS7Vzla0Y8Ea2-5z2HEi4X75d2Q/edit?usp=sharing)
@@ -44,7 +45,7 @@ Install the NVIDIA GRID vGPU driver, make sure to install it as a dkms module.
 
 Modify the line begining with `ExecStart=` in `/lib/systemd/system/nvidia-vgpud.service`
 and `/lib/systemd/system/nvidia-vgpu-mgr.service` to use `vgpu_unlock` as
-executable and pass the original executable as the first argument. Ex:
+the executable and pass the original executable as the first argument. Example:
 ```
 ExecStart=<path_to_vgpu_unlock>/vgpu_unlock /usr/bin/nvidia-vgpud
 ```
