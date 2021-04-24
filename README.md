@@ -83,11 +83,14 @@ Reboot.
 ---
 **NOTE**
 
-This script only works with graphics cards in the same generation as their professional Tesla counterparts.
-As a result, only Maxwell and newer generation Nvidia GPUs are supported. It is not designed to be used with
-low end graphics card models, so not all cards are guarenteed to work smoothly with vGPU. For the best experience,
-it is recommended to use graphics cards with the same chip model as the Tesla cards. The same applies to the
-operating system as well, as certain bleeding-edge Linux distributions may not work well with vGPU software.
+This script only works with graphics cards in the same generation as their 
+professional Tesla counterparts. As a result, only Maxwell and newer 
+generation Nvidia GPUs are supported. It is not designed to be used with
+low end graphics card models, so not all cards are guarenteed to work 
+smoothly with vGPU. For the best experience, it is recommended to use 
+graphics cards with the same chip model as the Tesla cards. 
+The same applies to the operating system as well, as certain bleeding-edge 
+Linux distributions may not work well with vGPU software.
 
 ---
 
