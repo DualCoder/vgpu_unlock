@@ -25,7 +25,7 @@ is [available here.](https://docs.google.com/document/d/1pzrWJ9h-zANCtyqRgS7Vzla
 
 ## Dependencies:
 
-* This tool requires Python3 and Python3-pip, the latest version is recommended.
+* This tool requires Python3 and Python3-pip; the latest version is recommended.
 * The python package "frida" is required. `pip3 install frida`.
 * The tool requires the NVIDIA GRID vGPU driver.
 * "dkms" is required as it simplifies the process of rebuilding the
