@@ -5,7 +5,7 @@ Unlock vGPU functionality for consumer-grade Nvidia GPUs.
 
 ## Important!
 
-This tool is not guarenteed to work out of the box in some cases, 
+This tool is not guaranteed to work out of the box in some cases, 
 so use it at your own risk.
 
 
